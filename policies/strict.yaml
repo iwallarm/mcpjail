@@ -1,0 +1,40 @@
+# Strict Policy - Maximum security, minimal access
+# Use for untrusted MCP servers or production environments
+
+name: strict
+version: 1
+
+network:
+  mode: none  # No network access
+  allowed_hosts: []
+
+filesystem:
+  mode: explicit
+  mounts:
+    - path: /tmp
+      mode: rw
+      size: 100M
+
+tools:
+  mode: blocklist
+  allowed: []
+  blocked:
+    - execute_command
+    - run_shell
+    - exec
+    - shell
+    - run_command
+    - bash
+    - sh
+    - cmd
+    - powershell
+
+resources:
+  memory: 256M
+  cpu: 0.5
+  pids: 50
+  timeout: 60s
+
+audit:
+  enabled: true
+  level: info

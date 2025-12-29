@@ -1,0 +1,19 @@
+/target
+**/*.rs.bk
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+*.o
+*.so
+*.dylib
+
+# Test artifacts
+/coverage/

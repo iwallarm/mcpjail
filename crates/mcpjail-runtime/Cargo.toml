@@ -1,0 +1,21 @@
+[package]
+name = "mcpjail-runtime"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+description = "Docker runtime management for MCP servers"
+
+[dependencies]
+mcpjail-policy.workspace = true
+
+tokio.workspace = true
+bollard.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+futures.workspace = true

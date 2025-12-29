@@ -1,0 +1,87 @@
+{
+  "defaultAction": "SCMP_ACT_ERRNO",
+  "architectures": [
+    "SCMP_ARCH_X86_64",
+    "SCMP_ARCH_AARCH64"
+  ],
+  "syscalls": [
+    {
+      "names": [
+        "read", "write", "close", "fstat", "lstat", "stat", "poll", "lseek",
+        "mmap", "mprotect", "munmap", "brk",
+        "rt_sigaction", "rt_sigprocmask", "rt_sigreturn",
+        "ioctl", "access", "pipe", "pipe2",
+        "select", "dup", "dup2", "dup3",
+        "getpid", "getuid", "getgid", "geteuid", "getegid", "getppid", "getgroups",
+        "setsid", "setpgid", "getpgid", "getsid",
+        "fcntl", "flock", "fsync", "fdatasync", "ftruncate", "truncate",
+        "getdents", "getdents64", "getcwd", "chdir", "fchdir",
+        "openat", "mkdirat", "newfstatat", "unlinkat", "renameat", "renameat2",
+        "readlinkat", "faccessat", "faccessat2",
+        "clock_gettime", "clock_getres", "clock_nanosleep", "nanosleep",
+        "futex", "epoll_create", "epoll_create1", "epoll_ctl", "epoll_wait", "epoll_pwait",
+        "eventfd", "eventfd2", "getrandom",
+        "mremap", "madvise", "sched_yield", "sched_getaffinity",
+        "set_tid_address", "set_robust_list", "get_robust_list",
+        "prlimit64", "arch_prctl",
+        "exit", "exit_group", "wait4", "waitid",
+        "tgkill", "kill", "prctl", "sysinfo", "uname", "getrlimit",
+        "pread64", "pwrite64", "readv", "writev", "preadv", "pwritev", "preadv2", "pwritev2",
+        "statx", "memfd_create", "copy_file_range", "sendfile"
+      ],
+      "action": "SCMP_ACT_ALLOW",
+      "comment": "Allow basic file and memory operations"
+    },
+    {
+      "names": [
+        "socket", "connect", "accept", "accept4",
+        "sendto", "recvfrom", "sendmsg", "recvmsg",
+        "shutdown", "bind", "listen",
+        "getsockname", "getpeername", "socketpair",
+        "setsockopt", "getsockopt"
+      ],
+      "action": "SCMP_ACT_ALLOW",
+      "comment": "Allow network operations (controlled by network namespace)"
+    },
+    {
+      "names": ["clone", "clone3"],
+      "action": "SCMP_ACT_ALLOW",
+      "comment": "Allow threading"
+    },
+    {
+      "names": ["execve", "execveat"],
+      "action": "SCMP_ACT_ERRNO",
+      "comment": "Block process spawning - prevents shell execution"
+    },
+    {
+      "names": ["ptrace", "process_vm_readv", "process_vm_writev"],
+      "action": "SCMP_ACT_ERRNO",
+      "comment": "Block debugging/inspection"
+    },
+    {
+      "names": ["mount", "umount2", "pivot_root", "chroot"],
+      "action": "SCMP_ACT_ERRNO",
+      "comment": "Block filesystem manipulation"
+    },
+    {
+      "names": ["init_module", "finit_module", "delete_module"],
+      "action": "SCMP_ACT_ERRNO",
+      "comment": "Block kernel module loading"
+    },
+    {
+      "names": ["reboot", "kexec_load", "kexec_file_load"],
+      "action": "SCMP_ACT_ERRNO",
+      "comment": "Block system reboot"
+    },
+    {
+      "names": ["setuid", "setgid", "setreuid", "setregid", "setresuid", "setresgid"],
+      "action": "SCMP_ACT_ERRNO",
+      "comment": "Block privilege changes"
+    },
+    {
+      "names": ["keyctl", "request_key", "add_key"],
+      "action": "SCMP_ACT_ERRNO",
+      "comment": "Block kernel keyring access"
+    }
+  ]
+}

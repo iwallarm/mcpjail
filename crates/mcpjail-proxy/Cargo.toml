@@ -1,0 +1,20 @@
+[package]
+name = "mcpjail-proxy"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+description = "MCP protocol proxy with validation and filtering"
+
+[dependencies]
+mcpjail-policy.workspace = true
+
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+futures.workspace = true

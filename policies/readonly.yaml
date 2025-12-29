@@ -1,0 +1,37 @@
+# Read-Only Policy - No writes, no network, no exec
+# Ideal for documentation and analysis servers
+
+name: readonly
+version: 1
+
+network:
+  mode: none
+  allowed_hosts: []
+
+filesystem:
+  mode: explicit
+  mounts:
+    - path: /workspace
+      mode: ro  # Read-only access to workspace
+
+tools:
+  mode: allowlist
+  allowed:
+    - read_file
+    - list_directory
+    - search_files
+    - get_file_info
+    - find_files
+    - read_directory
+    - stat
+  blocked: []
+
+resources:
+  memory: 512M
+  cpu: 1.0
+  pids: 100
+  timeout: 300s
+
+audit:
+  enabled: true
+  level: info

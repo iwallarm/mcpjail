@@ -1,0 +1,39 @@
+# Database Policy - Network access for database connections only
+# Use for database MCP servers that connect to specific hosts
+
+name: database
+version: 1
+
+network:
+  mode: allowlist
+  allowed_hosts:
+    # Add your database hosts here
+    - "localhost"
+    - "127.0.0.1"
+    # Example: - "db.example.com"
+
+filesystem:
+  mode: explicit
+  mounts:
+    - path: /tmp
+      mode: rw
+      size: 100M
+
+tools:
+  mode: blocklist
+  allowed: []
+  blocked:
+    - execute_command
+    - run_shell
+    - write_file
+    - delete_file
+
+resources:
+  memory: 512M
+  cpu: 1.0
+  pids: 100
+  timeout: 300s
+
+audit:
+  enabled: true
+  level: info

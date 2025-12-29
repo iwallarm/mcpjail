@@ -1,0 +1,48 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/mcpjail-cli",
+    "crates/mcpjail-proxy",
+    "crates/mcpjail-runtime",
+    "crates/mcpjail-policy",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["MCP Jail Team <hello@mcpjail.com>"]
+license = "MIT"
+repository = "https://github.com/mcpjail/mcpjail"
+homepage = "https://mcpjail.com"
+description = "Secure sandbox for MCP servers - Run any MCP with zero trust, zero risk"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+
+# CLI
+clap = { version = "4.4", features = ["derive"] }
+
+# Docker
+bollard = "0.16"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Async utilities
+futures = "0.3"
+
+# Internal crates
+mcpjail-proxy = { path = "crates/mcpjail-proxy" }
+mcpjail-runtime = { path = "crates/mcpjail-runtime" }
+mcpjail-policy = { path = "crates/mcpjail-policy" }

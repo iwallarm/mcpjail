@@ -1,0 +1,33 @@
+# Network Isolated Policy - Full filesystem, no network
+# For file-processing MCP servers that don't need internet
+
+name: network-isolated
+version: 1
+
+network:
+  mode: none
+  allowed_hosts: []
+
+filesystem:
+  mode: explicit
+  mounts:
+    - path: /workspace
+      mode: rw
+    - path: /tmp
+      mode: rw
+      size: 200M
+
+tools:
+  mode: all  # All tools allowed
+  allowed: []
+  blocked: []
+
+resources:
+  memory: 512M
+  cpu: 1.0
+  pids: 100
+  timeout: 300s
+
+audit:
+  enabled: true
+  level: info

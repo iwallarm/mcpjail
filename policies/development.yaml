@@ -1,0 +1,39 @@
+# Development Policy - More permissive for local development
+# Use with trusted MCP servers on your local machine
+
+name: development
+version: 1
+
+network:
+  mode: allowlist
+  allowed_hosts:
+    - localhost
+    - 127.0.0.1
+    - "*.local"
+
+filesystem:
+  mode: explicit
+  mounts:
+    - path: /workspace
+      mode: rw  # Read-write access to workspace
+    - path: /tmp
+      mode: rw
+      size: 500M
+
+tools:
+  mode: blocklist
+  allowed: []
+  blocked:
+    - execute_command
+    - run_shell
+    # Other dangerous tools are allowed in dev mode
+
+resources:
+  memory: 1G
+  cpu: 2.0
+  pids: 200
+  timeout: 600s
+
+audit:
+  enabled: true
+  level: debug
