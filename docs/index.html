@@ -39,7 +39,7 @@
         <p class="hero-desc">Drop-in Docker containerization with protocol-level security enforcement for Model Context Protocol servers.</p>
 
         <div class="install-box">
-          <code class="install-cmd">curl -fsSL https://mcpjail.com/install.sh | sh</code>
+          <code class="install-cmd"><span class="syn-cmd">curl</span> <span class="syn-flag">-fsSL</span> https://mcpjail.com/install.sh | <span class="syn-cmd">sh</span></code>
           <button class="copy-btn" onclick="copyCmd()">COPY</button>
         </div>
         <p class="install-note">Works on macOS, Linux, and Windows (WSL2)</p>
@@ -106,7 +106,7 @@
       <div class="comparison">
         <div class="comparison-box comparison-before">
           <div class="comparison-header">BEFORE</div>
-          <code class="comparison-cmd">npx -y @modelcontextprotocol/server-filesystem /home/user</code>
+          <code class="comparison-cmd"><span class="syn-cmd">npx</span> <span class="syn-flag">-y</span> @modelcontextprotocol/server-filesystem <span class="syn-path">/home/user</span></code>
           <ul class="comparison-list danger-list">
             <li>Full filesystem access</li>
             <li>Unrestricted network</li>
@@ -117,7 +117,7 @@
         <div class="comparison-arrow">&#8594;</div>
         <div class="comparison-box comparison-after">
           <div class="comparison-header">AFTER</div>
-          <code class="comparison-cmd">mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
+          <code class="comparison-cmd"><span class="syn-cmd">mcpjail</span> npx <span class="syn-flag">-y</span> @modelcontextprotocol/server-filesystem <span class="syn-path">/workspace</span></code>
           <ul class="comparison-list safe-list">
             <li>Isolated in Docker container</li>
             <li>Network disabled by default</li>
@@ -263,7 +263,7 @@
 
       <h3>One-Line Install</h3>
       <div class="code-block">
-        <code>curl -fsSL https://mcpjail.com/install.sh | sh</code>
+        <code><span class="syn-cmd">curl</span> <span class="syn-flag">-fsSL</span> <span class="syn-path">https://mcpjail.com/install.sh</span> | <span class="syn-cmd">sh</span></code>
       </div>
 
       <h3>Manual Download</h3>
@@ -282,28 +282,28 @@
       <div class="example-block">
         <div class="example-title">Basic Usage</div>
         <div class="code-block">
-          <code>mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
+          <code><span class="syn-cmd">mcpjail</span> npx <span class="syn-flag">-y</span> @modelcontextprotocol/server-filesystem <span class="syn-path">/workspace</span></code>
         </div>
       </div>
 
       <div class="example-block">
         <div class="example-title">With Network Access</div>
         <div class="code-block">
-          <code>mcpjail --allow-host api.example.com python -m mcp_server</code>
+          <code><span class="syn-cmd">mcpjail</span> <span class="syn-flag">--allow-host</span> <span class="syn-path">api.example.com</span> python <span class="syn-flag">-m</span> mcp_server</code>
         </div>
       </div>
 
       <div class="example-block">
         <div class="example-title">With Write Access</div>
         <div class="code-block">
-          <code>mcpjail --mount .:/workspace:rw npx -y @some/mcp-server</code>
+          <code><span class="syn-cmd">mcpjail</span> <span class="syn-flag">--mount</span> <span class="syn-path">.:/workspace:rw</span> npx <span class="syn-flag">-y</span> @some/mcp-server</code>
         </div>
       </div>
 
       <div class="example-block">
         <div class="example-title">With Strict Policy</div>
         <div class="code-block">
-          <code>mcpjail --policy strict npx -y @untrusted/mcp-server</code>
+          <code><span class="syn-cmd">mcpjail</span> <span class="syn-flag">--policy</span> <span class="syn-str">strict</span> npx <span class="syn-flag">-y</span> @untrusted/mcp-server</code>
         </div>
       </div>
 
@@ -313,19 +313,19 @@
       <p>Update your <code>claude_desktop_config.json</code>:</p>
 
       <div class="code-block code-json">
-<pre>{
-  "mcpServers": {
-    "filesystem": {
-      "command": "mcpjail",
-      "args": [
-        "--policy", "readonly",
-        "npx", "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/workspace"
-      ]
-    }
-  }
-}</pre>
+<pre><span class="syn-bracket">{</span>
+  <span class="syn-key">"mcpServers"</span>: <span class="syn-bracket">{</span>
+    <span class="syn-key">"filesystem"</span>: <span class="syn-bracket">{</span>
+      <span class="syn-key">"command"</span>: <span class="syn-str">"mcpjail"</span>,
+      <span class="syn-key">"args"</span>: <span class="syn-bracket">[</span>
+        <span class="syn-str">"--policy"</span>, <span class="syn-str">"readonly"</span>,
+        <span class="syn-str">"npx"</span>, <span class="syn-str">"-y"</span>,
+        <span class="syn-str">"@modelcontextprotocol/server-filesystem"</span>,
+        <span class="syn-str">"/workspace"</span>
+      <span class="syn-bracket">]</span>
+    <span class="syn-bracket">}</span>
+  <span class="syn-bracket">}</span>
+<span class="syn-bracket">}</span></pre>
       </div>
     </div>
   </section>
@@ -361,33 +361,33 @@
       <p>Create YAML policy files for fine-grained control:</p>
 
       <div class="code-block code-yaml">
-<pre>name: custom
-version: 1
+<pre><span class="syn-key">name</span>: <span class="syn-str">custom</span>
+<span class="syn-key">version</span>: <span class="syn-num">1</span>
 
-network:
-  mode: allowlist
-  allowed_hosts:
-    - api.example.com:443
+<span class="syn-key">network</span>:
+  <span class="syn-key">mode</span>: <span class="syn-str">allowlist</span>
+  <span class="syn-key">allowed_hosts</span>:
+    - <span class="syn-path">api.example.com:443</span>
 
-filesystem:
-  mode: explicit
-  mounts:
-    - path: /workspace
-      mode: rw
-    - path: /data
-      mode: ro
+<span class="syn-key">filesystem</span>:
+  <span class="syn-key">mode</span>: <span class="syn-str">explicit</span>
+  <span class="syn-key">mounts</span>:
+    - <span class="syn-key">path</span>: <span class="syn-path">/workspace</span>
+      <span class="syn-key">mode</span>: <span class="syn-str">rw</span>
+    - <span class="syn-key">path</span>: <span class="syn-path">/data</span>
+      <span class="syn-key">mode</span>: <span class="syn-str">ro</span>
 
-tools:
-  mode: blocklist
-  blocked:
-    - execute_command
-    - run_shell
-    - eval
+<span class="syn-key">tools</span>:
+  <span class="syn-key">mode</span>: <span class="syn-str">blocklist</span>
+  <span class="syn-key">blocked</span>:
+    - <span class="syn-cmd">execute_command</span>
+    - <span class="syn-cmd">run_shell</span>
+    - <span class="syn-cmd">eval</span>
 
-resources:
-  memory: 512M
-  cpu: 1.0
-  timeout: 300s</pre>
+<span class="syn-key">resources</span>:
+  <span class="syn-key">memory</span>: <span class="syn-num">512M</span>
+  <span class="syn-key">cpu</span>: <span class="syn-num">1.0</span>
+  <span class="syn-key">timeout</span>: <span class="syn-num">300s</span></pre>
       </div>
     </div>
   </section>
