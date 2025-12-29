@@ -375,21 +375,92 @@ body {
   padding-top: 3rem;
 }
 
-/* === ARCHITECTURE === */
-.arch-diagram {
+/* === ARCHITECTURE SVG === */
+.arch-svg-container {
   margin: 1.5rem 0;
   border: 1px solid var(--border);
-  background: #1e1e1e;
-  overflow-x: auto;
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
 }
-.arch-ascii {
+.arch-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.arch-label {
+  font-size: 12px;
+  font-weight: 400;
+  fill: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.arch-title {
+  font-size: 14px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+.arch-title.accent-text {
+  fill: var(--accent);
+}
+.arch-subtitle {
+  font-size: 11px;
+  font-weight: 300;
+  fill: var(--muted);
+}
+.arch-feature {
+  font-size: 11px;
+  font-weight: 400;
+  fill: var(--ink);
+}
+.arch-flow {
+  font-size: 9px;
+  font-weight: 400;
+  fill: var(--muted);
+  font-style: italic;
+}
+.arch-security-item {
+  font-size: 10px;
+  font-weight: 400;
+  fill: var(--muted);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  color: #d4d4d4;
+}
+.arch-node {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.arch-node:hover {
+  transform: translateY(-2px);
+}
+.arch-node:hover .arch-box {
+  stroke-width: 2;
+}
+.arch-node-accent:hover .arch-box {
+  filter: drop-shadow(0 4px 8px rgba(214, 40, 40, 0.15));
+}
+.arch-node-container:hover .arch-box {
+  stroke: var(--ink);
+  stroke-dasharray: none;
+}
+
+/* Tooltip */
+.arch-tooltip {
+  position: absolute;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.6rem 1rem;
+  font-size: 0.75rem;
   line-height: 1.4;
-  padding: 1.5rem;
-  margin: 0;
-  white-space: pre;
+  max-width: 280px;
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+.arch-tooltip.visible {
+  opacity: 1;
 }
 
 /* === TABLES === */
