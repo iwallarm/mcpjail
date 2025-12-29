@@ -123,8 +123,9 @@ body {
 /* Hero Slider */
 .hero-slider {
   position: relative;
-  min-height: 140px;
+  height: 160px;
   margin-bottom: 1rem;
+  overflow: hidden;
 }
 .hero-slide {
   position: absolute;
@@ -251,37 +252,71 @@ body {
   text-align: justify;
 }
 
-/* === STATS GRID === */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+/* === STATS LIST === */
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   margin: 2rem 0;
 }
-.stat-block {
-  background: var(--paper);
-  padding: 1.5rem 1rem;
-  text-align: center;
-  transition: transform 0.2s ease, background 0.2s ease;
-  cursor: default;
+.stat-item {
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
 }
-.stat-block:hover {
-  transform: translateY(-2px);
-  background: var(--accent-light);
+.stat-item:hover {
+  border-color: var(--accent);
+}
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
 }
 .stat-value {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 300;
   color: var(--accent);
-  line-height: 1;
+  min-width: 80px;
 }
 .stat-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  font-weight: 500;
+  flex: 1;
+}
+.stat-toggle {
+  font-size: 1.2rem;
   color: var(--muted);
-  margin-top: 0.5rem;
+  transition: transform 0.2s ease;
+}
+.stat-item[data-expanded="true"] .stat-toggle {
+  transform: rotate(45deg);
+}
+.stat-details {
+  display: none;
+  padding: 0 1rem 1rem 1rem;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+.stat-item[data-expanded="true"] .stat-details {
+  display: block;
+}
+.stat-details p {
+  margin: 0.8rem 0;
+}
+.stat-code {
+  background: #1e1e1e;
+  border-left: 2px solid var(--accent);
+}
+.stat-code pre {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #d4d4d4;
+  padding: 0.8rem 1rem;
+  margin: 0;
+  overflow-x: auto;
 }
 
 /* === CALLOUT === */
@@ -314,23 +349,30 @@ body {
 /* === REPORT DOWNLOAD === */
 .report-download {
   margin: 2rem 0;
+  text-align: center;
 }
 .download-link {
   display: inline-flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 1.5rem;
-  border: 1px solid var(--line);
+  padding: 1rem 2rem;
+  border: 2px solid var(--accent);
   text-decoration: none;
   color: var(--ink);
   transition: all 0.2s;
+  background: var(--paper);
 }
 .download-link:hover {
-  background: var(--ink);
+  background: var(--accent);
   color: var(--paper);
 }
 .download-icon {
-  font-size: 1.5rem;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.download-link:hover .download-icon {
+  stroke: var(--paper);
 }
 .download-text {
   display: flex;
@@ -347,7 +389,7 @@ body {
   letter-spacing: 0.05em;
 }
 .download-link:hover .download-text span {
-  color: var(--border);
+  color: rgba(255,255,255,0.8);
 }
 
 /* === COMPARISON === */
@@ -436,6 +478,34 @@ body {
   padding: 0.8rem 1.2rem;
   text-align: center;
   background: var(--paper);
+  transition: border-color 0.2s ease;
+}
+.arch-clickable {
+  cursor: pointer;
+}
+.arch-clickable:hover {
+  border-color: var(--accent);
+}
+.arch-box-details {
+  display: none;
+  text-align: left;
+  font-size: 0.8rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+.arch-clickable[data-expanded="true"] .arch-box-details {
+  display: block;
+}
+.arch-box-details p {
+  margin: 0.5rem 0;
+}
+.arch-box-details ul, .arch-box-details ol {
+  margin: 0.5rem 0 0.5rem 1.2rem;
+  font-size: 0.8rem;
+}
+.arch-box-details li {
+  margin: 0.3rem 0;
 }
 .arch-box-accent {
   border: 2px solid var(--accent);
@@ -819,8 +889,19 @@ p code, li code {
   .hero-title {
     font-size: 1.8rem;
   }
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .stat-header {
+    flex-wrap: wrap;
+  }
+  .stat-value {
+    min-width: 70px;
+    font-size: 1.3rem;
+  }
+  .arch-flow-row {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .arch-arrow-simple {
+    transform: rotate(90deg);
   }
   .comparison {
     grid-template-columns: 1fr;

