@@ -6,7 +6,7 @@
 
 set -e
 
-REPO="anthropics/mcpjail"
+REPO="iwallarm/mcpjail"
 BINARY_NAME="mcpjail"
 INSTALL_DIR="/usr/local/bin"
 
