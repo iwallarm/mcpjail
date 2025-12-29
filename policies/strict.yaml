@@ -19,6 +19,7 @@ tools:
   mode: blocklist
   allowed: []
   blocked:
+    # Shell execution
     - execute_command
     - run_shell
     - exec
@@ -28,6 +29,25 @@ tools:
     - sh
     - cmd
     - powershell
+    - terminal
+    - run_in_terminal
+    # Code execution
+    - eval
+    - evaluate
+    - run_code
+    - execute_code
+    - run_python
+    - run_script
+    # Secrets exposure
+    - get_config
+    - get_env
+    - get_secrets
+    - get_credentials
+    # Command injection vectors
+    - search_files
+    - find_files
+    - grep
+    - system
 
 resources:
   memory: 256M

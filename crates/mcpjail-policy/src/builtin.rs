@@ -25,10 +25,35 @@ pub fn strict_policy() -> Policy {
             mode: ToolMode::Blocklist,
             allowed: vec![],
             blocked: vec![
+                // Shell execution
                 "execute_command".to_string(),
                 "run_shell".to_string(),
                 "exec".to_string(),
                 "shell".to_string(),
+                "run_command".to_string(),
+                "bash".to_string(),
+                "sh".to_string(),
+                "cmd".to_string(),
+                "powershell".to_string(),
+                "terminal".to_string(),
+                "run_in_terminal".to_string(),
+                // Code execution
+                "eval".to_string(),
+                "evaluate".to_string(),
+                "run_code".to_string(),
+                "execute_code".to_string(),
+                "run_python".to_string(),
+                "run_script".to_string(),
+                // Secrets exposure
+                "get_config".to_string(),
+                "get_env".to_string(),
+                "get_secrets".to_string(),
+                "get_credentials".to_string(),
+                // Command injection vectors
+                "search_files".to_string(),
+                "find_files".to_string(),
+                "grep".to_string(),
+                "system".to_string(),
             ],
         },
         resources: ResourceLimits {
@@ -186,6 +211,9 @@ mod tests {
         let policy = strict_policy();
         assert!(!policy.tools.is_allowed("execute_command"));
         assert!(!policy.tools.is_allowed("shell"));
+        assert!(!policy.tools.is_allowed("evaluate"));
+        assert!(!policy.tools.is_allowed("get_config"));
+        assert!(!policy.tools.is_allowed("search_files"));
     }
 
     #[test]
