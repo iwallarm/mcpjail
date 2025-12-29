@@ -130,149 +130,117 @@
       <div class="divider"><div class="divider-symbol"></div></div>
 
       <h3>Architecture</h3>
-      <div class="arch-svg-container">
-        <svg class="arch-svg" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
-          <!-- Outer frame - User's Machine -->
-          <rect x="10" y="10" width="880" height="500" fill="none" stroke="#1a1a1a" stroke-width="1"/>
-          <text x="450" y="35" text-anchor="middle" class="arch-label">User's Machine</text>
+      <div class="arch-simple">
+        <!-- Flow diagram -->
+        <div class="arch-flow-row">
+          <div class="arch-box-simple">
+            <div class="arch-box-title">MCP Client</div>
+            <div class="arch-box-sub">Claude, Cursor</div>
+          </div>
+          <div class="arch-arrow-simple">&#8594;</div>
+          <div class="arch-box-simple arch-box-accent">
+            <div class="arch-box-title">MCP Jail Proxy</div>
+            <div class="arch-box-sub">Always active</div>
+          </div>
+          <div class="arch-arrow-simple">&#8594;</div>
+          <div class="arch-box-simple arch-box-decision">
+            <div class="arch-box-title">Sandbox</div>
+          </div>
+        </div>
 
-          <!-- MCP Client Box -->
-          <g class="arch-node" data-tooltip="MCP clients like Claude Desktop or Cursor that communicate via stdio">
-            <rect x="30" y="70" width="130" height="90" fill="#fafafa" stroke="#1a1a1a" stroke-width="1" class="arch-box"/>
-            <text x="95" y="100" text-anchor="middle" class="arch-title">MCP Client</text>
-            <text x="95" y="120" text-anchor="middle" class="arch-subtitle">(Claude Desktop,</text>
-            <text x="95" y="135" text-anchor="middle" class="arch-subtitle">Cursor, etc.)</text>
-          </g>
+        <!-- Three sandbox options -->
+        <div class="arch-options">
+          <div class="arch-option arch-option-best" data-expanded="false" onclick="toggleArchOption(this)">
+            <div class="arch-option-header">
+              <span class="arch-option-num">1</span>
+              <div class="arch-option-info">
+                <div class="arch-option-title">Docker Container</div>
+                <div class="arch-option-badge">BEST ISOLATION</div>
+              </div>
+              <span class="arch-option-toggle">+</span>
+            </div>
+            <div class="arch-option-details">
+              <p>Full OS-level isolation using hardened Docker containers.</p>
+              <ul>
+                <li><code>--network=none</code> - No network access by default</li>
+                <li><code>--read-only</code> - Immutable root filesystem</li>
+                <li><code>--cap-drop=ALL</code> - All Linux capabilities dropped</li>
+                <li>Custom seccomp profile blocking dangerous syscalls</li>
+                <li>Memory, CPU, and PID limits enforced</li>
+                <li>Automatic container cleanup on exit</li>
+              </ul>
+              <div class="arch-code-sample">
+                <pre># Docker security configuration
+docker run --rm \
+  --network=none \
+  --read-only \
+  --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --pids-limit=100 \
+  --memory=512m \
+  mcpjail-runtime</pre>
+              </div>
+            </div>
+          </div>
 
-          <!-- Arrows between Client and Proxy -->
-          <g class="arch-arrow">
-            <line x1="160" y1="100" x2="240" y2="100" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arrowhead)"/>
-            <line x1="240" y1="130" x2="160" y2="130" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arrowhead)"/>
-            <text x="200" y="93" text-anchor="middle" class="arch-flow">request</text>
-            <text x="200" y="147" text-anchor="middle" class="arch-flow">response</text>
-          </g>
+          <div class="arch-option arch-option-good" data-expanded="false" onclick="toggleArchOption(this)">
+            <div class="arch-option-header">
+              <span class="arch-option-num">2</span>
+              <div class="arch-option-info">
+                <div class="arch-option-title">macOS Sandbox</div>
+                <div class="arch-option-badge">GOOD ISOLATION</div>
+              </div>
+              <span class="arch-option-toggle">+</span>
+            </div>
+            <div class="arch-option-details">
+              <p>Native macOS Seatbelt sandbox when Docker is unavailable.</p>
+              <ul>
+                <li>Uses <code>sandbox-exec</code> with custom profile</li>
+                <li>Blocks access to <code>~/.ssh</code>, <code>~/.aws</code>, <code>~/.gnupg</code></li>
+                <li>Network filtering and restrictions</li>
+                <li>Filesystem path allowlisting</li>
+              </ul>
+              <div class="arch-code-sample">
+                <pre># Seatbelt profile (simplified)
+(version 1)
+(deny default)
+(allow file-read* (subpath "/workspace"))
+(deny file-read*
+  (regex "^/Users/[^/]+/\\.ssh")
+  (regex "^/Users/[^/]+/\\.aws"))
+(deny network*)</pre>
+              </div>
+            </div>
+          </div>
 
-          <!-- MCP Jail Proxy Box -->
-          <g class="arch-node arch-node-accent" data-tooltip="Rust-based proxy that validates all MCP protocol messages and enforces security policies. Always active in all modes.">
-            <rect x="250" y="55" width="280" height="120" fill="#fef2f2" stroke="#d62828" stroke-width="2" class="arch-box"/>
-            <text x="390" y="82" text-anchor="middle" class="arch-title accent-text">MCP Jail Proxy</text>
-            <text x="390" y="100" text-anchor="middle" class="arch-subtitle">(Rust, always active)</text>
-            <line x1="265" y1="110" x2="515" y2="110" stroke="#e5e5e5" stroke-width="1"/>
-            <text x="275" y="130" class="arch-feature">&#8226; MCP Protocol Validation</text>
-            <text x="275" y="148" class="arch-feature">&#8226; Request/Response Filtering</text>
-            <text x="275" y="166" class="arch-feature">&#8226; Policy Enforcement</text>
-          </g>
-
-          <!-- Decision diamond -->
-          <g class="arch-node" data-tooltip="Automatic sandbox selection: tries Docker first, then macOS sandbox, finally proxy-only fallback">
-            <polygon points="390,195 440,230 390,265 340,230" fill="#fafafa" stroke="#1a1a1a" stroke-width="1" class="arch-box"/>
-            <text x="390" y="235" text-anchor="middle" class="arch-decision">Sandbox?</text>
-          </g>
-
-          <!-- Arrow from Proxy to Decision -->
-          <line x1="390" y1="175" x2="390" y2="195" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arrowhead)"/>
-
-          <!-- Three paths from decision -->
-
-          <!-- Path 1: Docker (left) -->
-          <g class="arch-arrow">
-            <line x1="340" y1="230" x2="180" y2="230" stroke="#1a1a1a" stroke-width="1"/>
-            <line x1="180" y1="230" x2="180" y2="290" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arrowhead)"/>
-            <text x="260" y="222" text-anchor="middle" class="arch-flow">Docker available</text>
-          </g>
-
-          <!-- Path 2: macOS Sandbox (center) -->
-          <g class="arch-arrow">
-            <line x1="390" y1="265" x2="390" y2="290" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arrowhead)"/>
-            <text x="480" y="282" text-anchor="middle" class="arch-flow">macOS + no Docker</text>
-          </g>
-
-          <!-- Path 3: Proxy-only fallback (right) -->
-          <g class="arch-arrow">
-            <line x1="440" y1="230" x2="600" y2="230" stroke="#737373" stroke-width="1" stroke-dasharray="4,2"/>
-            <line x1="600" y1="230" x2="600" y2="290" stroke="#737373" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arrowhead-muted)"/>
-            <text x="520" y="222" text-anchor="middle" class="arch-flow">no sandbox</text>
-          </g>
-
-          <!-- Docker Container Box -->
-          <g class="arch-node arch-node-container" data-tooltip="Full isolation: read-only rootfs, --network=none, dropped capabilities, seccomp profile, resource limits. Best security.">
-            <rect x="40" y="300" width="280" height="190" fill="#e8f5e9" stroke="#065f46" stroke-width="2" class="arch-box"/>
-            <text x="180" y="325" text-anchor="middle" class="arch-title" style="fill:#065f46">Docker Container</text>
-            <text x="180" y="343" text-anchor="middle" class="arch-badge arch-badge-best">BEST ISOLATION</text>
-
-            <!-- MCP Server inside Docker -->
-            <rect x="80" y="355" width="200" height="35" fill="#fafafa" stroke="#1a1a1a" stroke-width="1"/>
-            <text x="180" y="377" text-anchor="middle" class="arch-subtitle">MCP Server</text>
-
-            <!-- Docker security features -->
-            <text x="55" y="410" class="arch-security-item">&#9632; --network=none</text>
-            <text x="175" y="410" class="arch-security-item">&#9632; read-only fs</text>
-            <text x="55" y="428" class="arch-security-item">&#9632; seccomp profile</text>
-            <text x="175" y="428" class="arch-security-item">&#9632; cap-drop ALL</text>
-            <text x="55" y="446" class="arch-security-item">&#9632; resource limits</text>
-            <text x="175" y="446" class="arch-security-item">&#9632; no privileges</text>
-            <text x="55" y="464" class="arch-security-item">&#9632; auto cleanup</text>
-            <text x="175" y="464" class="arch-security-item">&#9632; isolated PID</text>
-          </g>
-
-          <!-- macOS Sandbox Box -->
-          <g class="arch-node arch-node-container" data-tooltip="macOS Seatbelt sandbox (sandbox-exec): blocks sensitive paths (.ssh, .aws, .gnupg), network isolation, filesystem restrictions. Good fallback when Docker unavailable.">
-            <rect x="340" y="300" width="220" height="190" fill="#fff7ed" stroke="#92400e" stroke-width="2" class="arch-box"/>
-            <text x="450" y="325" text-anchor="middle" class="arch-title" style="fill:#92400e">macOS Sandbox</text>
-            <text x="450" y="343" text-anchor="middle" class="arch-badge arch-badge-good">GOOD ISOLATION</text>
-
-            <!-- MCP Server inside macOS sandbox -->
-            <rect x="365" y="355" width="170" height="35" fill="#fafafa" stroke="#1a1a1a" stroke-width="1"/>
-            <text x="450" y="377" text-anchor="middle" class="arch-subtitle">MCP Server</text>
-
-            <!-- macOS security features -->
-            <text x="355" y="410" class="arch-security-item">&#9632; sandbox-exec</text>
-            <text x="355" y="428" class="arch-security-item">&#9632; Seatbelt profile</text>
-            <text x="355" y="446" class="arch-security-item">&#9632; blocks ~/.ssh, ~/.aws</text>
-            <text x="355" y="464" class="arch-security-item">&#9632; network filtering</text>
-            <text x="355" y="482" class="arch-security-item">&#9632; fs path restrictions</text>
-          </g>
-
-          <!-- Proxy-Only Fallback Box -->
-          <g class="arch-node" data-tooltip="WARNING: No OS-level isolation! Only MCP protocol validation and response filtering. Server runs with full user privileges. Install Docker for proper security.">
-            <rect x="580" y="300" width="180" height="190" fill="#fef2f2" stroke="#d62828" stroke-width="1" stroke-dasharray="4,2" class="arch-box"/>
-            <text x="670" y="325" text-anchor="middle" class="arch-title" style="fill:#d62828">Proxy-Only</text>
-            <text x="670" y="343" text-anchor="middle" class="arch-badge arch-badge-warn">NO ISOLATION</text>
-
-            <!-- MCP Server (no sandbox) -->
-            <rect x="600" y="355" width="140" height="35" fill="#fafafa" stroke="#d62828" stroke-width="1" stroke-dasharray="2,2"/>
-            <text x="670" y="377" text-anchor="middle" class="arch-subtitle">MCP Server</text>
-
-            <!-- Warning features -->
-            <text x="595" y="410" class="arch-security-item" style="fill:#d62828">&#9888; Full user access</text>
-            <text x="595" y="428" class="arch-security-item" style="fill:#d62828">&#9888; No fs isolation</text>
-            <text x="595" y="446" class="arch-security-item" style="fill:#d62828">&#9888; Full network</text>
-            <text x="595" y="464" class="arch-security-item">&#10003; Protocol validation</text>
-            <text x="595" y="482" class="arch-security-item">&#10003; Response filtering</text>
-          </g>
-
-          <!-- Legend -->
-          <g class="arch-legend">
-            <rect x="720" y="60" width="150" height="100" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
-            <text x="795" y="80" text-anchor="middle" class="arch-label">SANDBOX PRIORITY</text>
-            <text x="735" y="100" class="arch-legend-item"><tspan fill="#065f46">1.</tspan> Docker (best)</text>
-            <text x="735" y="118" class="arch-legend-item"><tspan fill="#92400e">2.</tspan> macOS sandbox</text>
-            <text x="735" y="136" class="arch-legend-item"><tspan fill="#d62828">3.</tspan> Proxy-only (warn)</text>
-          </g>
-
-          <!-- Arrowhead markers -->
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#1a1a1a"/>
-            </marker>
-            <marker id="arrowhead-muted" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#737373"/>
-            </marker>
-          </defs>
-        </svg>
-
-        <!-- Tooltip -->
-        <div class="arch-tooltip" id="archTooltip"></div>
+          <div class="arch-option arch-option-warn" data-expanded="false" onclick="toggleArchOption(this)">
+            <div class="arch-option-header">
+              <span class="arch-option-num">3</span>
+              <div class="arch-option-info">
+                <div class="arch-option-title">Proxy-Only Fallback</div>
+                <div class="arch-option-badge">NO OS ISOLATION</div>
+              </div>
+              <span class="arch-option-toggle">+</span>
+            </div>
+            <div class="arch-option-details">
+              <p><strong>Warning:</strong> No OS-level sandbox. Only MCP protocol validation.</p>
+              <ul>
+                <li>&#9888; Server runs with full user privileges</li>
+                <li>&#9888; Full filesystem access</li>
+                <li>&#9888; Full network access</li>
+                <li>&#10003; MCP protocol validation still active</li>
+                <li>&#10003; Response filtering for sensitive data</li>
+              </ul>
+              <div class="arch-code-sample">
+                <pre># Warning message shown
+WARNING: No container isolation available.
+Running with proxy validation only.
+Install Docker for full security:
+  https://docs.docker.com/get-docker/</pre>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -335,38 +303,141 @@
       </div>
 
       <h3>Vulnerability Coverage</h3>
-      <p>Based on our audit findings, MCP Jail blocks these attack vectors:</p>
+      <p>Based on our audit findings, MCP Jail blocks these attack vectors. Click to see examples:</p>
 
-      <div class="vuln-grid">
-        <div class="vuln-card">
-          <div class="vuln-id">MCP012</div>
-          <div class="vuln-name">Path Traversal</div>
-          <div class="vuln-prev">76.0% of servers</div>
+      <div class="vuln-list">
+        <div class="vuln-item" data-expanded="false" onclick="toggleVuln(this)">
+          <div class="vuln-header">
+            <span class="vuln-id">MCP012</span>
+            <span class="vuln-name">Path Traversal</span>
+            <span class="vuln-prev">76.0% of servers</span>
+            <span class="vuln-toggle">+</span>
+          </div>
+          <div class="vuln-details">
+            <p><strong>Attack:</strong> Access files outside allowed directories using <code>../</code> sequences.</p>
+            <div class="vuln-code">
+              <pre># Malicious request
+read_file("../../.ssh/id_rsa")
+read_file("/etc/passwd")
+
+# MCP Jail blocks with path validation
+ERROR: Path traversal detected: ../../.ssh/id_rsa</pre>
+            </div>
+            <p><strong>Protection:</strong> All file paths validated against mount allowlist. Traversal patterns blocked.</p>
+          </div>
         </div>
-        <div class="vuln-card">
-          <div class="vuln-id">MCP013</div>
-          <div class="vuln-name">Shell Execution</div>
-          <div class="vuln-prev">70.3% of servers</div>
+
+        <div class="vuln-item" data-expanded="false" onclick="toggleVuln(this)">
+          <div class="vuln-header">
+            <span class="vuln-id">MCP013</span>
+            <span class="vuln-name">Shell Execution</span>
+            <span class="vuln-prev">70.3% of servers</span>
+            <span class="vuln-toggle">+</span>
+          </div>
+          <div class="vuln-details">
+            <p><strong>Attack:</strong> Execute arbitrary shell commands via vulnerable MCP tools.</p>
+            <div class="vuln-code">
+              <pre># Vulnerable server code
+subprocess.run(user_input, shell=True)
+
+# MCP Jail blocks via tool blocklist + seccomp
+ERROR: Tool 'execute_command' is blocked by policy
+# Even if tool allowed, seccomp blocks execve syscall</pre>
+            </div>
+            <p><strong>Protection:</strong> Tool blocklist + seccomp profile blocks process spawning.</p>
+          </div>
         </div>
-        <div class="vuln-card">
-          <div class="vuln-id">MCP017</div>
-          <div class="vuln-name">SSRF</div>
-          <div class="vuln-prev">75.4% of servers</div>
+
+        <div class="vuln-item" data-expanded="false" onclick="toggleVuln(this)">
+          <div class="vuln-header">
+            <span class="vuln-id">MCP017</span>
+            <span class="vuln-name">SSRF</span>
+            <span class="vuln-prev">75.4% of servers</span>
+            <span class="vuln-toggle">+</span>
+          </div>
+          <div class="vuln-details">
+            <p><strong>Attack:</strong> Access internal networks, cloud metadata, or localhost services.</p>
+            <div class="vuln-code">
+              <pre># Malicious requests
+fetch("http://169.254.169.254/latest/meta-data/")  # AWS creds
+fetch("http://localhost:8080/admin")                # Internal
+fetch("http://192.168.1.1/config")                  # Private net
+
+# MCP Jail blocks with --network=none
+ERROR: Network access denied (container isolated)</pre>
+            </div>
+            <p><strong>Protection:</strong> <code>--network=none</code> by default. Allowlist specific hosts if needed.</p>
+          </div>
         </div>
-        <div class="vuln-card">
-          <div class="vuln-id">MCP044</div>
-          <div class="vuln-name">Command Injection</div>
-          <div class="vuln-prev">70.3% of servers</div>
+
+        <div class="vuln-item" data-expanded="false" onclick="toggleVuln(this)">
+          <div class="vuln-header">
+            <span class="vuln-id">MCP044</span>
+            <span class="vuln-name">Command Injection</span>
+            <span class="vuln-prev">70.3% of servers</span>
+            <span class="vuln-toggle">+</span>
+          </div>
+          <div class="vuln-details">
+            <p><strong>Attack:</strong> Inject shell metacharacters into command arguments.</p>
+            <div class="vuln-code">
+              <pre># Malicious input
+filename = "test.txt; rm -rf /"
+os.system(f"cat {filename}")
+
+# MCP Jail blocks via seccomp
+# execve() syscall blocked - cannot spawn processes
+ERROR: Operation not permitted (seccomp)</pre>
+            </div>
+            <p><strong>Protection:</strong> Seccomp blocks execve. Even if injection succeeds, no shell available.</p>
+          </div>
         </div>
-        <div class="vuln-card">
-          <div class="vuln-id">MCP021</div>
-          <div class="vuln-name">Insecure Deserialization</div>
-          <div class="vuln-prev">Critical RCE</div>
+
+        <div class="vuln-item" data-expanded="false" onclick="toggleVuln(this)">
+          <div class="vuln-header">
+            <span class="vuln-id">MCP021</span>
+            <span class="vuln-name">Insecure Deserialization</span>
+            <span class="vuln-prev">Critical RCE</span>
+            <span class="vuln-toggle">+</span>
+          </div>
+          <div class="vuln-details">
+            <p><strong>Attack:</strong> Execute code via pickle, YAML, or other unsafe deserialization.</p>
+            <div class="vuln-code">
+              <pre># Malicious pickle payload
+import pickle
+payload = pickle.dumps(RCEPayload())
+# Server unpickles: pickle.loads(user_data)
+
+# MCP Jail: RCE contained in isolated container
+# - No network to exfiltrate data
+# - No persistent filesystem changes
+# - Container destroyed on exit</pre>
+            </div>
+            <p><strong>Protection:</strong> Container isolation limits blast radius. No persistence or exfiltration.</p>
+          </div>
         </div>
-        <div class="vuln-card">
-          <div class="vuln-id">MCP041</div>
-          <div class="vuln-name">Dynamic Execution</div>
-          <div class="vuln-prev">eval()/exec() RCE</div>
+
+        <div class="vuln-item" data-expanded="false" onclick="toggleVuln(this)">
+          <div class="vuln-header">
+            <span class="vuln-id">MCP041</span>
+            <span class="vuln-name">Dynamic Execution</span>
+            <span class="vuln-prev">eval()/exec() RCE</span>
+            <span class="vuln-toggle">+</span>
+          </div>
+          <div class="vuln-details">
+            <p><strong>Attack:</strong> Execute arbitrary code via eval(), exec(), or similar functions.</p>
+            <div class="vuln-code">
+              <pre># Vulnerable server code
+eval(user_provided_expression)
+exec(user_provided_code)
+
+# MCP Jail blocks via tool blocklist
+ERROR: Tool 'evaluate' is blocked by policy
+ERROR: Tool 'run_code' is blocked by policy
+
+# Even if bypassed, container limits damage</pre>
+            </div>
+            <p><strong>Protection:</strong> Tool blocklist blocks eval-like tools. Container isolation as backup.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -596,34 +667,15 @@
       setTimeout(() => btn.textContent = 'COPY', 2000);
     }
 
-    // Architecture diagram tooltips
-    document.addEventListener('DOMContentLoaded', function() {
-      const tooltip = document.getElementById('archTooltip');
-      const container = document.querySelector('.arch-svg-container');
-      const nodes = document.querySelectorAll('.arch-node[data-tooltip]');
+    function toggleArchOption(el) {
+      const expanded = el.getAttribute('data-expanded') === 'true';
+      el.setAttribute('data-expanded', !expanded);
+    }
 
-      nodes.forEach(node => {
-        node.addEventListener('mouseenter', function(e) {
-          const text = this.getAttribute('data-tooltip');
-          tooltip.textContent = text;
-          tooltip.classList.add('visible');
-        });
-
-        node.addEventListener('mousemove', function(e) {
-          const rect = container.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-
-          // Position tooltip above cursor
-          tooltip.style.left = Math.min(x - 100, rect.width - 290) + 'px';
-          tooltip.style.top = (y - tooltip.offsetHeight - 10) + 'px';
-        });
-
-        node.addEventListener('mouseleave', function() {
-          tooltip.classList.remove('visible');
-        });
-      });
-    });
+    function toggleVuln(el) {
+      const expanded = el.getAttribute('data-expanded') === 'true';
+      el.setAttribute('data-expanded', !expanded);
+    }
   </script>
 </body>
 </html>
