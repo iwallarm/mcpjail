@@ -486,25 +486,32 @@ body {
 .arch-clickable:hover {
   border-color: var(--accent);
 }
-.arch-box-details {
-  display: none;
-  text-align: left;
-  font-size: 0.8rem;
-  margin-top: 0.8rem;
-  padding-top: 0.8rem;
-  border-top: 1px solid var(--border);
+.arch-clickable.active {
+  border-color: var(--accent);
+  background: var(--accent-light);
 }
-.arch-clickable[data-expanded="true"] .arch-box-details {
+.arch-box-accent.active {
+  background: #fecaca;
+}
+.arch-info-box {
+  display: none;
+  background: #f5f5f5;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 1rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+.arch-info-box.visible {
   display: block;
 }
-.arch-box-details p {
-  margin: 0.5rem 0;
+.arch-info-box p {
+  margin: 0 0 0.5rem 0;
 }
-.arch-box-details ul, .arch-box-details ol {
-  margin: 0.5rem 0 0.5rem 1.2rem;
-  font-size: 0.8rem;
+.arch-info-box ul {
+  margin: 0.5rem 0 0 1.2rem;
 }
-.arch-box-details li {
+.arch-info-box li {
   margin: 0.3rem 0;
 }
 .arch-box-accent {
