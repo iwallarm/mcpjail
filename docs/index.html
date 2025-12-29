@@ -32,11 +32,39 @@
     <div class="hero-frame">
       <div class="hero-content">
         <p class="hero-label">DID YOU KNOW?</p>
-        <h1 class="hero-title">Any MCP server can read your<br><span class="accent">SSH keys, AWS credentials, and browser passwords.</span></h1>
+
+        <div class="hero-slider" id="heroSlider">
+          <div class="hero-slide active">
+            <h1 class="hero-title">Any MCP server can read your<br><span class="accent">SSH keys, AWS credentials, and browser passwords.</span></h1>
+            <p class="hero-desc">Right now. Without asking. Every MCP server runs with your full user privileges.</p>
+          </div>
+          <div class="hero-slide">
+            <h1 class="hero-title">That MCP server you just installed?<br><span class="accent">It can run rm -rf / on your machine.</span></h1>
+            <p class="hero-desc">No sandbox. No restrictions. Full access to everything you can access.</p>
+          </div>
+          <div class="hero-slide">
+            <h1 class="hero-title">MCP servers can read your<br><span class="accent">browser cookies, saved passwords, and session tokens.</span></h1>
+            <p class="hero-desc">Your Chrome profile, Firefox data, 1Password vaults. All accessible.</p>
+          </div>
+          <div class="hero-slide">
+            <h1 class="hero-title">One malicious npm dependency and<br><span class="accent">your entire codebase is uploaded to a remote server.</span></h1>
+            <p class="hero-desc">93.4% of MCP servers use unpinned dependencies. Supply chain attacks are trivial.</p>
+          </div>
+          <div class="hero-slide">
+            <h1 class="hero-title">That "helpful" MCP server could be<br><span class="accent">mining crypto, joining botnets, or installing backdoors.</span></h1>
+            <p class="hero-desc">You'd never know. There's no logging, no monitoring, no restrictions.</p>
+          </div>
+        </div>
+
+        <div class="hero-dots" id="heroDots">
+          <span class="hero-dot active" onclick="goToSlide(0)"></span>
+          <span class="hero-dot" onclick="goToSlide(1)"></span>
+          <span class="hero-dot" onclick="goToSlide(2)"></span>
+          <span class="hero-dot" onclick="goToSlide(3)"></span>
+          <span class="hero-dot" onclick="goToSlide(4)"></span>
+        </div>
 
         <div class="divider"><div class="divider-symbol"></div></div>
-
-        <p class="hero-desc">Right now. Without asking. Every MCP server runs with your full user privileges. One malicious npm package away from disaster.</p>
 
         <div class="install-box">
           <code class="install-cmd"><span class="syn-cmd">curl</span> <span class="syn-flag">-fsSL</span> https://mcpjail.com/install.sh | <span class="syn-cmd">sh</span></code>
@@ -676,6 +704,63 @@ ERROR: Tool 'run_code' is blocked by policy
       const expanded = el.getAttribute('data-expanded') === 'true';
       el.setAttribute('data-expanded', !expanded);
     }
+
+    // Hero Slider
+    let currentSlide = 0;
+    let slideInterval;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.hero-dot');
+
+    // Shuffle slides on page load
+    function shuffleSlides() {
+      const slider = document.getElementById('heroSlider');
+      const slidesArray = Array.from(slides);
+
+      // Fisher-Yates shuffle
+      for (let i = slidesArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        slider.appendChild(slidesArray[j]);
+      }
+    }
+
+    function goToSlide(index) {
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+
+      const allSlides = document.querySelectorAll('.hero-slide');
+      const allDots = document.querySelectorAll('.hero-dot');
+
+      currentSlide = index;
+      allSlides[currentSlide].classList.add('active');
+      allDots[currentSlide].classList.add('active');
+
+      // Reset timer when manually clicking
+      clearInterval(slideInterval);
+      startSlider();
+    }
+
+    function nextSlide() {
+      const allSlides = document.querySelectorAll('.hero-slide');
+      currentSlide = (currentSlide + 1) % allSlides.length;
+      goToSlide(currentSlide);
+    }
+
+    function startSlider() {
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      shuffleSlides();
+      // Re-select slides after shuffle and set first as active
+      const shuffledSlides = document.querySelectorAll('.hero-slide');
+      shuffledSlides.forEach((s, i) => {
+        s.classList.remove('active');
+        if (i === 0) s.classList.add('active');
+      });
+      currentSlide = 0;
+      startSlider();
+    });
   </script>
 </body>
 </html>
