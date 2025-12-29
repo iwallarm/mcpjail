@@ -1,178 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCP Jail - Secure MCP Server Sandbox</title>
-    <meta name="description" content="Run any MCP server with zero trust, zero risk. Drop-in security sandbox for Model Context Protocol servers.">
-    <meta name="keywords" content="MCP, Model Context Protocol, security, sandbox, Docker, Claude, AI safety">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Jail - Secure MCP Server Sandbox</title>
+  <meta name="description" content="Run any MCP server with zero trust, zero risk. Drop-in security sandbox for Model Context Protocol servers.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9618;</text></svg>">
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                <span class="logo-icon">🔒</span>
-                <span class="logo-text">MCP Jail</span>
-            </div>
-            <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#install">Install</a>
-                <a href="#downloads">Downloads</a>
-                <a href="https://github.com/iwallarm/mcpjail" class="github-link">
-                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                    </svg>
-                    GitHub
-                </a>
-            </div>
-        </nav>
-    </header>
 
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Run any MCP server with<br><span class="highlight">zero trust, zero risk.</span></h1>
-                <p class="tagline">Drop-in security sandbox for Model Context Protocol servers. Automatic Docker containerization with protocol-level security enforcement.</p>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <span class="brand-symbol">&#9618;</span>
+        <span class="brand-text">MCP JAIL</span>
+      </div>
+      <div class="nav-links">
+        <a href="#problem">Problem</a>
+        <a href="#solution">Solution</a>
+        <a href="#install">Install</a>
+        <a href="#downloads">Downloads</a>
+        <a href="https://github.com/iwallarm/mcpjail" class="nav-github">GitHub</a>
+      </div>
+    </div>
+  </nav>
 
-                <div class="cta-section">
-                    <div class="install-command">
-                        <code>curl -fsSL https://mcpjail.com/install.sh | sh</code>
-                        <button class="copy-btn" onclick="copyInstallCommand()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <p class="install-hint">Works on macOS, Linux, and Windows (WSL2)</p>
-                </div>
-            </div>
-        </section>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-frame">
+      <div class="hero-content">
+        <p class="hero-label">SECURE MCP SERVER SANDBOX</p>
+        <h1 class="hero-title">Run any MCP server with<br><span class="accent">zero trust, zero risk.</span></h1>
 
-        <section class="problem" id="problem">
-            <div class="container">
-                <h2>The Problem</h2>
-                <p class="section-intro">Our security audit of 501 MCP servers revealed alarming vulnerabilities:</p>
-                <div class="stats-grid">
-                    <div class="stat-card danger">
-                        <span class="stat-number">96.4%</span>
-                        <span class="stat-label">contain exploitable vulnerabilities</span>
-                    </div>
-                    <div class="stat-card warning">
-                        <span class="stat-number">70.3%</span>
-                        <span class="stat-label">have shell execution capabilities</span>
-                    </div>
-                    <div class="stat-card warning">
-                        <span class="stat-number">93.4%</span>
-                        <span class="stat-label">use unpinned dependencies</span>
-                    </div>
-                    <div class="stat-card danger">
-                        <span class="stat-number">75.4%</span>
-                        <span class="stat-label">have unrestricted network access</span>
-                    </div>
-                </div>
-                <p class="problem-summary">MCP clients like Claude Desktop and Cursor run servers with <strong>full user privileges</strong>. If compromised, attackers get complete access to your machine.</p>
-            </div>
-        </section>
+        <div class="divider"><div class="divider-symbol"></div></div>
 
-        <section class="solution">
-            <div class="container">
-                <h2>The Solution</h2>
-                <div class="before-after">
-                    <div class="before">
-                        <h3>Before <span class="badge danger">Unsafe</span></h3>
-                        <div class="code-block">
-                            <code>npx -y @modelcontextprotocol/server-filesystem /home/user</code>
-                        </div>
-                        <ul class="risk-list">
-                            <li>Full filesystem access</li>
-                            <li>Unrestricted network</li>
-                            <li>Can execute any command</li>
-                            <li>No audit logging</li>
-                        </ul>
-                    </div>
-                    <div class="arrow">→</div>
-                    <div class="after">
-                        <h3>After <span class="badge success">Sandboxed</span></h3>
-                        <div class="code-block">
-                            <code>mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
-                        </div>
-                        <ul class="safe-list">
-                            <li>Isolated in Docker container</li>
-                            <li>Network disabled by default</li>
-                            <li>Protocol-level filtering</li>
-                            <li>Complete audit trail</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <p class="hero-desc">Drop-in Docker containerization with protocol-level security enforcement for Model Context Protocol servers.</p>
 
-        <section class="features" id="features">
-            <div class="container">
-                <h2>Security Features</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🐳</div>
-                        <h3>Docker Isolation</h3>
-                        <p>Every MCP server runs in a hardened container with read-only filesystem, dropped capabilities, and seccomp filtering.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌐</div>
-                        <h3>Network Control</h3>
-                        <p>Network disabled by default. Allowlist specific hosts when needed. Prevents data exfiltration.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔍</div>
-                        <h3>Protocol Proxy</h3>
-                        <p>Rust-based MCP protocol proxy validates every request and response. Blocks path traversal and SSRF attacks.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📋</div>
-                        <h3>Tool Filtering</h3>
-                        <p>Allowlist or blocklist specific MCP tools. Prevent dangerous operations like shell execution.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📁</div>
-                        <h3>Mount Control</h3>
-                        <p>Only explicitly mounted paths are accessible. Default read-only. No access to ~/.ssh, ~/.aws, or secrets.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Audit Logging</h3>
-                        <p>Complete audit trail of all MCP operations. Know exactly what tools were called and with what arguments.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div class="install-box">
+          <code class="install-cmd">curl -fsSL https://mcpjail.com/install.sh | sh</code>
+          <button class="copy-btn" onclick="copyCmd()">COPY</button>
+        </div>
+        <p class="install-note">Works on macOS, Linux, and Windows (WSL2)</p>
+      </div>
+    </div>
+  </section>
 
-        <section class="usage" id="install">
-            <div class="container">
-                <h2>Quick Start</h2>
-                <div class="usage-examples">
-                    <div class="example">
-                        <h3>Basic Usage</h3>
-                        <div class="code-block">
-                            <code>mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
-                        </div>
-                    </div>
-                    <div class="example">
-                        <h3>With Network Access</h3>
-                        <div class="code-block">
-                            <code>mcpjail --allow-host api.example.com python -m mcp_server</code>
-                        </div>
-                    </div>
-                    <div class="example">
-                        <h3>With Write Access</h3>
-                        <div class="code-block">
-                            <code>mcpjail --mount .:/workspace:rw npx -y @some/mcp-server</code>
-                        </div>
-                    </div>
-                    <div class="example">
-                        <h3>Claude Desktop Config</h3>
-                        <div class="code-block json">
+  <!-- Problem Section -->
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2 class="section-title">The Problem</h2>
+      </div>
+
+      <p class="intro-text">Our security audit of <strong>501 MCP servers</strong> revealed critical vulnerabilities across the ecosystem. MCP clients like Claude Desktop and Cursor run servers with full user privileges - if compromised, attackers gain complete access to your machine.</p>
+
+      <div class="stats-grid">
+        <div class="stat-block">
+          <div class="stat-value">96.4%</div>
+          <div class="stat-label">EXPLOITABLE VULNERABILITIES</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-value">70.3%</div>
+          <div class="stat-label">SHELL EXECUTION</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-value">93.4%</div>
+          <div class="stat-label">UNPINNED DEPENDENCIES</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-value">75.4%</div>
+          <div class="stat-label">UNRESTRICTED NETWORK</div>
+        </div>
+      </div>
+
+      <div class="callout callout-critical">
+        <div class="callout-title">Critical Finding</div>
+        <p>1,736 security vulnerabilities identified across 492 repositories including RCE via pickle deserialization (351), exec() injection (268), shell command execution (183), and SSRF vulnerabilities.</p>
+      </div>
+
+      <div class="report-download">
+        <a href="MCP_SECURITY_REPORT.pdf" class="download-link">
+          <span class="download-icon">&#9744;</span>
+          <span class="download-text">
+            <strong>Download Full Security Report</strong>
+            <span>PDF - 501 MCP Servers Audited</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section" id="solution">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2 class="section-title">The Solution</h2>
+      </div>
+
+      <p class="intro-text">MCP Jail is a drop-in replacement that wraps any MCP server command in a hardened Docker container with a Rust-based protocol proxy enforcing security policies at runtime.</p>
+
+      <div class="comparison">
+        <div class="comparison-box comparison-before">
+          <div class="comparison-header">BEFORE</div>
+          <code class="comparison-cmd">npx -y @modelcontextprotocol/server-filesystem /home/user</code>
+          <ul class="comparison-list danger-list">
+            <li>Full filesystem access</li>
+            <li>Unrestricted network</li>
+            <li>Can execute any command</li>
+            <li>No audit logging</li>
+          </ul>
+        </div>
+        <div class="comparison-arrow">&#8594;</div>
+        <div class="comparison-box comparison-after">
+          <div class="comparison-header">AFTER</div>
+          <code class="comparison-cmd">mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
+          <ul class="comparison-list safe-list">
+            <li>Isolated in Docker container</li>
+            <li>Network disabled by default</li>
+            <li>Protocol-level filtering</li>
+            <li>Complete audit trail</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider"><div class="divider-symbol"></div></div>
+
+      <h3>Architecture</h3>
+      <div class="arch-diagram">
+        <pre class="arch-ascii">
+┌─────────────────────────────────────────────────────────────────┐
+│                         User's Machine                          │
+│  ┌─────────────┐     ┌──────────────────────────────────────┐  │
+│  │ MCP Client  │────▶│           MCP Jail Proxy             │  │
+│  │ (Claude,    │     │         (Rust, stdio)                │  │
+│  │  Cursor)    │◀────│  • MCP Protocol Validation           │  │
+│  └─────────────┘     │  • Request/Response Filtering        │  │
+│                      │  • Policy Enforcement                │  │
+│                      └──────────────┬───────────────────────┘  │
+│                                     │ stdio over docker exec   │
+│                      ┌──────────────▼───────────────────────┐  │
+│                      │     Docker Container (Hardened)      │  │
+│                      │  ┌────────────────────────────────┐  │  │
+│                      │  │        MCP Server              │  │  │
+│                      │  └────────────────────────────────┘  │  │
+│                      │  • No network (--network=none)       │  │
+│                      │  • Read-only rootfs                  │  │
+│                      │  • Dropped capabilities              │  │
+│                      │  • Seccomp profile                   │  │
+│                      │  • Resource limits (CPU/mem)         │  │
+│                      └──────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Features Section -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Security Features</h2>
+      </div>
+
+      <div class="features-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Protection</th>
+              <th>Description</th>
+              <th>Blocks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Container Isolation</strong></td>
+              <td>Every MCP server runs in a hardened Docker container with read-only filesystem, dropped capabilities, and seccomp filtering.</td>
+              <td>Container escape, privilege escalation</td>
+            </tr>
+            <tr>
+              <td><strong>Network Control</strong></td>
+              <td>Network disabled by default (--network=none). Allowlist specific hosts when needed.</td>
+              <td>Data exfiltration, SSRF, C2 callbacks</td>
+            </tr>
+            <tr>
+              <td><strong>Protocol Proxy</strong></td>
+              <td>Rust-based MCP protocol proxy validates every JSON-RPC request and response.</td>
+              <td>Path traversal, malformed requests</td>
+            </tr>
+            <tr>
+              <td><strong>Tool Filtering</strong></td>
+              <td>Allowlist or blocklist specific MCP tools. Blocks dangerous patterns like execute_command, eval, shell.</td>
+              <td>RCE, shell injection, code execution</td>
+            </tr>
+            <tr>
+              <td><strong>Path Validation</strong></td>
+              <td>Validates all file paths in requests. Blocks traversal patterns (../) and access outside mounts.</td>
+              <td>Credential theft, config access</td>
+            </tr>
+            <tr>
+              <td><strong>SSRF Protection</strong></td>
+              <td>Blocks access to internal networks, cloud metadata (169.254.x.x), and localhost.</td>
+              <td>Cloud credential theft, internal recon</td>
+            </tr>
+            <tr>
+              <td><strong>Audit Logging</strong></td>
+              <td>Complete audit trail of all MCP operations with tool names, arguments, and responses.</td>
+              <td>Forensics, compliance</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Vulnerability Coverage</h3>
+      <p>Based on our audit findings, MCP Jail blocks these attack vectors:</p>
+
+      <div class="vuln-grid">
+        <div class="vuln-card">
+          <div class="vuln-id">MCP012</div>
+          <div class="vuln-name">Path Traversal</div>
+          <div class="vuln-prev">76.0% of servers</div>
+        </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP013</div>
+          <div class="vuln-name">Shell Execution</div>
+          <div class="vuln-prev">70.3% of servers</div>
+        </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP017</div>
+          <div class="vuln-name">SSRF</div>
+          <div class="vuln-prev">75.4% of servers</div>
+        </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP044</div>
+          <div class="vuln-name">Command Injection</div>
+          <div class="vuln-prev">70.3% of servers</div>
+        </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP021</div>
+          <div class="vuln-name">Insecure Deserialization</div>
+          <div class="vuln-prev">Critical RCE</div>
+        </div>
+        <div class="vuln-card">
+          <div class="vuln-id">MCP041</div>
+          <div class="vuln-name">Dynamic Execution</div>
+          <div class="vuln-prev">eval()/exec() RCE</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Section -->
+  <section class="section" id="install">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Installation</h2>
+      </div>
+
+      <h3>One-Line Install</h3>
+      <div class="code-block">
+        <code>curl -fsSL https://mcpjail.com/install.sh | sh</code>
+      </div>
+
+      <h3>Manual Download</h3>
+      <p>Download the binary for your platform from the <a href="#downloads">downloads section</a> and place in your PATH.</p>
+
+      <h3>Requirements</h3>
+      <ul class="req-list">
+        <li>Docker installed and running</li>
+        <li>macOS, Linux, or Windows with WSL2</li>
+      </ul>
+
+      <div class="divider"><div class="divider-symbol"></div></div>
+
+      <h3>Usage Examples</h3>
+
+      <div class="example-block">
+        <div class="example-title">Basic Usage</div>
+        <div class="code-block">
+          <code>mcpjail npx -y @modelcontextprotocol/server-filesystem /workspace</code>
+        </div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-title">With Network Access</div>
+        <div class="code-block">
+          <code>mcpjail --allow-host api.example.com python -m mcp_server</code>
+        </div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-title">With Write Access</div>
+        <div class="code-block">
+          <code>mcpjail --mount .:/workspace:rw npx -y @some/mcp-server</code>
+        </div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-title">With Strict Policy</div>
+        <div class="code-block">
+          <code>mcpjail --policy strict npx -y @untrusted/mcp-server</code>
+        </div>
+      </div>
+
+      <div class="divider"><div class="divider-symbol"></div></div>
+
+      <h3>Claude Desktop Configuration</h3>
+      <p>Update your <code>claude_desktop_config.json</code>:</p>
+
+      <div class="code-block code-json">
 <pre>{
   "mcpServers": {
     "filesystem": {
@@ -186,106 +326,156 @@
     }
   }
 }</pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+      </div>
+    </div>
+  </section>
 
-        <section class="downloads" id="downloads">
-            <div class="container">
-                <h2>Downloads</h2>
-                <p class="section-intro">Pre-built binaries for all major platforms. Or use the install script above.</p>
-                <div class="downloads-grid">
-                    <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-apple-darwin.tar.gz" class="download-card">
-                        <div class="os-icon">🍎</div>
-                        <h3>macOS Intel</h3>
-                        <span class="arch">x86_64</span>
-                    </a>
-                    <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-apple-darwin.tar.gz" class="download-card">
-                        <div class="os-icon">🍎</div>
-                        <h3>macOS Apple Silicon</h3>
-                        <span class="arch">ARM64</span>
-                    </a>
-                    <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-unknown-linux-gnu.tar.gz" class="download-card">
-                        <div class="os-icon">🐧</div>
-                        <h3>Linux</h3>
-                        <span class="arch">x86_64</span>
-                    </a>
-                    <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-unknown-linux-gnu.tar.gz" class="download-card">
-                        <div class="os-icon">🐧</div>
-                        <h3>Linux ARM</h3>
-                        <span class="arch">ARM64</span>
-                    </a>
-                    <a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-pc-windows-msvc.zip" class="download-card">
-                        <div class="os-icon">🪟</div>
-                        <h3>Windows</h3>
-                        <span class="arch">x86_64 (WSL2)</span>
-                    </a>
-                </div>
-                <p class="download-note">
-                    <a href="https://github.com/iwallarm/mcpjail/releases">View all releases</a> |
-                    <a href="https://github.com/iwallarm/mcpjail">Source code</a>
-                </p>
-            </div>
-        </section>
+  <!-- Policies Section -->
+  <section class="section" id="policies">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Built-in Policies</h2>
+      </div>
 
-        <section class="policies">
-            <div class="container">
-                <h2>Built-in Policies</h2>
-                <div class="policies-grid">
-                    <div class="policy-card">
-                        <h3>strict</h3>
-                        <p>Maximum security. No network, read-only filesystem, minimal tools allowed.</p>
-                    </div>
-                    <div class="policy-card">
-                        <h3>readonly</h3>
-                        <p>Read-only access to mounted paths. No write operations, no network.</p>
-                    </div>
-                    <div class="policy-card">
-                        <h3>development</h3>
-                        <p>Balanced for development. Write access to workspace, localhost network.</p>
-                    </div>
-                    <div class="policy-card">
-                        <h3>network-isolated</h3>
-                        <p>Full filesystem access but completely network isolated.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <span class="logo-icon">🔒</span>
-                    <span class="logo-text">MCP Jail</span>
-                    <p>Secure MCP Server Sandbox</p>
-                </div>
-                <div class="footer-links">
-                    <a href="https://github.com/iwallarm/mcpjail">GitHub</a>
-                    <a href="https://github.com/iwallarm/mcpjail/issues">Issues</a>
-                    <a href="https://github.com/iwallarm/mcpjail/releases">Releases</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>Built with 🦀 Rust. Open source under MIT License.</p>
-            </div>
+      <div class="policies-grid">
+        <div class="policy-card">
+          <div class="policy-name">strict</div>
+          <div class="policy-desc">Maximum security. No network, read-only /tmp only, blocks all dangerous tools (execute_command, eval, shell, etc). Use for untrusted servers.</div>
         </div>
-    </footer>
+        <div class="policy-card">
+          <div class="policy-name">readonly</div>
+          <div class="policy-desc">Read-only access to mounted paths. Only allows read_file, list_directory, search_files, get_file_info tools.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-name">development</div>
+          <div class="policy-desc">Balanced for local development. Write access to /workspace, localhost network allowed, extended timeout.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-name">network-isolated</div>
+          <div class="policy-desc">Full filesystem access to mounted paths but completely network isolated. Good for offline processing.</div>
+        </div>
+      </div>
 
-    <script>
-        function copyInstallCommand() {
-            const command = 'curl -fsSL https://mcpjail.com/install.sh | sh';
-            navigator.clipboard.writeText(command).then(() => {
-                const btn = document.querySelector('.copy-btn');
-                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                setTimeout(() => {
-                    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
-                }, 2000);
-            });
-        }
-    </script>
+      <h3>Custom Policies</h3>
+      <p>Create YAML policy files for fine-grained control:</p>
+
+      <div class="code-block code-yaml">
+<pre>name: custom
+version: 1
+
+network:
+  mode: allowlist
+  allowed_hosts:
+    - api.example.com:443
+
+filesystem:
+  mode: explicit
+  mounts:
+    - path: /workspace
+      mode: rw
+    - path: /data
+      mode: ro
+
+tools:
+  mode: blocklist
+  blocked:
+    - execute_command
+    - run_shell
+    - eval
+
+resources:
+  memory: 512M
+  cpu: 1.0
+  timeout: 300s</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Downloads Section -->
+  <section class="section" id="downloads">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2 class="section-title">Downloads</h2>
+      </div>
+
+      <p>Pre-built binaries for all major platforms. Or use the <a href="#install">install script</a>.</p>
+
+      <div class="downloads-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Architecture</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>macOS</td>
+              <td>Intel (x86_64)</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-apple-darwin.tar.gz">mcpjail-x86_64-apple-darwin.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>macOS</td>
+              <td>Apple Silicon (ARM64)</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-apple-darwin.tar.gz">mcpjail-aarch64-apple-darwin.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>Linux</td>
+              <td>x86_64</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-unknown-linux-gnu.tar.gz">mcpjail-x86_64-unknown-linux-gnu.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>Linux</td>
+              <td>ARM64</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-aarch64-unknown-linux-gnu.tar.gz">mcpjail-aarch64-unknown-linux-gnu.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>Windows</td>
+              <td>x86_64 (WSL2)</td>
+              <td><a href="https://github.com/iwallarm/mcpjail/releases/latest/download/mcpjail-x86_64-pc-windows-msvc.zip">mcpjail-x86_64-pc-windows-msvc.zip</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="downloads-note">
+        <a href="https://github.com/iwallarm/mcpjail/releases">View all releases</a> &#183;
+        <a href="https://github.com/iwallarm/mcpjail">Source code</a> &#183;
+        <a href="MCP_SECURITY_REPORT.pdf">Security audit report (PDF)</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="divider"><div class="divider-symbol"></div></div>
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="brand-symbol">&#9618;</span>
+          <span class="brand-text">MCP JAIL</span>
+        </div>
+        <p class="footer-tagline">Secure MCP Server Sandbox</p>
+        <p class="footer-links">
+          <a href="https://github.com/iwallarm/mcpjail">GitHub</a> &#183;
+          <a href="https://github.com/iwallarm/mcpjail/issues">Issues</a> &#183;
+          <a href="https://github.com/iwallarm/mcpjail/releases">Releases</a>
+        </p>
+        <p class="footer-copy">Built with Rust. Open source under MIT License.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function copyCmd() {
+      navigator.clipboard.writeText('curl -fsSL https://mcpjail.com/install.sh | sh');
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = 'COPIED';
+      setTimeout(() => btn.textContent = 'COPY', 2000);
+    }
+  </script>
 </body>
 </html>
