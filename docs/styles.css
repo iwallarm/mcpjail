@@ -426,6 +426,30 @@ body {
   fill: var(--muted);
   font-family: 'IBM Plex Mono', monospace;
 }
+.arch-decision {
+  font-size: 10px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+.arch-badge {
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+.arch-badge-best {
+  fill: #065f46;
+}
+.arch-badge-good {
+  fill: #92400e;
+}
+.arch-badge-warn {
+  fill: #d62828;
+}
+.arch-legend-item {
+  font-size: 11px;
+  font-weight: 400;
+  fill: var(--ink);
+}
 .arch-node {
   cursor: pointer;
   transition: transform 0.2s ease;
