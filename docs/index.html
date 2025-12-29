@@ -31,18 +31,18 @@
   <section class="hero">
     <div class="hero-frame">
       <div class="hero-content">
-        <p class="hero-label">SECURE MCP SERVER SANDBOX</p>
-        <h1 class="hero-title">Run any MCP server with<br><span class="accent">zero trust, zero risk.</span></h1>
+        <p class="hero-label">DID YOU KNOW?</p>
+        <h1 class="hero-title">Any MCP server can read your<br><span class="accent">SSH keys, AWS credentials, and browser passwords.</span></h1>
 
         <div class="divider"><div class="divider-symbol"></div></div>
 
-        <p class="hero-desc">Drop-in Docker containerization with protocol-level security enforcement for Model Context Protocol servers.</p>
+        <p class="hero-desc">Right now. Without asking. Every MCP server runs with your full user privileges. One malicious npm package away from disaster.</p>
 
         <div class="install-box">
           <code class="install-cmd"><span class="syn-cmd">curl</span> <span class="syn-flag">-fsSL</span> https://mcpjail.com/install.sh | <span class="syn-cmd">sh</span></code>
           <button class="copy-btn" onclick="copyCmd()">COPY</button>
         </div>
-        <p class="install-note">Works on macOS, Linux, and Windows (WSL2)</p>
+        <p class="install-note">Fix it in 10 seconds. Works on macOS, Linux, and Windows (WSL2)</p>
       </div>
     </div>
   </section>
@@ -55,30 +55,30 @@
         <h2 class="section-title">The Problem</h2>
       </div>
 
-      <p class="intro-text">Our security audit of <strong>501 MCP servers</strong> revealed critical vulnerabilities across the ecosystem. MCP clients like Claude Desktop and Cursor run servers with full user privileges - if compromised, attackers gain complete access to your machine.</p>
+      <p class="intro-text">We audited <strong>501 MCP servers</strong> from the official registry. The results? Terrifying. Nearly every server can steal your credentials, exfiltrate your code, or backdoor your system. And Claude Desktop gives them permission to do it.</p>
 
       <div class="stats-grid">
         <div class="stat-block">
           <div class="stat-value">96.4%</div>
-          <div class="stat-label">EXPLOITABLE VULNERABILITIES</div>
+          <div class="stat-label">CAN HACK YOUR MACHINE</div>
         </div>
         <div class="stat-block">
           <div class="stat-value">70.3%</div>
-          <div class="stat-label">SHELL EXECUTION</div>
+          <div class="stat-label">CAN RUN ANY COMMAND</div>
         </div>
         <div class="stat-block">
           <div class="stat-value">93.4%</div>
-          <div class="stat-label">UNPINNED DEPENDENCIES</div>
+          <div class="stat-label">VULNERABLE TO SUPPLY CHAIN</div>
         </div>
         <div class="stat-block">
           <div class="stat-value">75.4%</div>
-          <div class="stat-label">UNRESTRICTED NETWORK</div>
+          <div class="stat-label">CAN PHONE HOME</div>
         </div>
       </div>
 
       <div class="callout callout-critical">
-        <div class="callout-title">Critical Finding</div>
-        <p>1,736 security vulnerabilities identified across 492 repositories including RCE via pickle deserialization (351), exec() injection (268), shell command execution (183), and SSRF vulnerabilities.</p>
+        <div class="callout-title">What can a malicious MCP server do?</div>
+        <p>Read <code>~/.ssh/id_rsa</code>, <code>~/.aws/credentials</code>, browser cookies and passwords, your entire codebase. Execute <code>rm -rf /</code>. Install backdoors. Mine crypto. Join botnets. Exfiltrate everything to a remote server. All without you ever knowing.</p>
       </div>
 
       <div class="report-download">
@@ -101,28 +101,28 @@
         <h2 class="section-title">The Solution</h2>
       </div>
 
-      <p class="intro-text">MCP Jail is a drop-in replacement that wraps any MCP server command in a hardened Docker container with a Rust-based protocol proxy enforcing security policies at runtime.</p>
+      <p class="intro-text">Add one word to your command. That's it. MCP Jail wraps any server in an isolated sandbox. No network. No filesystem access. No way to steal your keys. Even if the server is malicious, it can't touch anything.</p>
 
       <div class="comparison">
         <div class="comparison-box comparison-before">
-          <div class="comparison-header">BEFORE</div>
+          <div class="comparison-header">DANGEROUS</div>
           <code class="comparison-cmd"><span class="syn-cmd">npx</span> <span class="syn-flag">-y</span> @modelcontextprotocol/server-filesystem <span class="syn-path">/home/user</span></code>
           <ul class="comparison-list danger-list">
-            <li>Full filesystem access</li>
-            <li>Unrestricted network</li>
-            <li>Can execute any command</li>
-            <li>No audit logging</li>
+            <li>Can read ~/.ssh, ~/.aws, ~/.gnupg</li>
+            <li>Can upload your code anywhere</li>
+            <li>Can run rm -rf / if it wants</li>
+            <li>You'll never know it happened</li>
           </ul>
         </div>
         <div class="comparison-arrow">&#8594;</div>
         <div class="comparison-box comparison-after">
-          <div class="comparison-header">AFTER</div>
+          <div class="comparison-header">SAFE</div>
           <code class="comparison-cmd"><span class="syn-cmd">mcpjail</span> npx <span class="syn-flag">-y</span> @modelcontextprotocol/server-filesystem <span class="syn-path">/workspace</span></code>
           <ul class="comparison-list safe-list">
-            <li>Isolated in Docker container</li>
-            <li>Network disabled by default</li>
-            <li>Protocol-level filtering</li>
-            <li>Complete audit trail</li>
+            <li>Can only see /workspace folder</li>
+            <li>No network = no exfiltration</li>
+            <li>Can't spawn processes</li>
+            <li>Every action is logged</li>
           </ul>
         </div>
       </div>
@@ -250,7 +250,7 @@ Install Docker for full security:
     <div class="container">
       <div class="section-header">
         <span class="section-num">03</span>
-        <h2 class="section-title">Security Features</h2>
+        <h2 class="section-title">How We Lock It Down</h2>
       </div>
 
       <div class="features-table">
@@ -302,8 +302,8 @@ Install Docker for full security:
         </table>
       </div>
 
-      <h3>Vulnerability Coverage</h3>
-      <p>Based on our audit findings, MCP Jail blocks these attack vectors. Click to see examples:</p>
+      <h3>Real Attacks We Block</h3>
+      <p>These aren't theoretical. We found these in real MCP servers. Click to see how each attack works:</p>
 
       <div class="vuln-list">
         <div class="vuln-item" data-expanded="false" onclick="toggleVuln(this)">
@@ -448,10 +448,10 @@ ERROR: Tool 'run_code' is blocked by policy
     <div class="container">
       <div class="section-header">
         <span class="section-num">04</span>
-        <h2 class="section-title">Installation</h2>
+        <h2 class="section-title">Get Protected in 10 Seconds</h2>
       </div>
 
-      <h3>One-Line Install</h3>
+      <h3>One Command. Done.</h3>
       <div class="code-block">
         <code><span class="syn-cmd">curl</span> <span class="syn-flag">-fsSL</span> <span class="syn-path">https://mcpjail.com/install.sh</span> | <span class="syn-cmd">sh</span></code>
       </div>
@@ -525,25 +525,25 @@ ERROR: Tool 'run_code' is blocked by policy
     <div class="container">
       <div class="section-header">
         <span class="section-num">05</span>
-        <h2 class="section-title">Built-in Policies</h2>
+        <h2 class="section-title">Choose Your Security Level</h2>
       </div>
 
       <div class="policies-grid">
         <div class="policy-card">
           <div class="policy-name">strict</div>
-          <div class="policy-desc">Maximum security. No network, read-only /tmp only, blocks all dangerous tools (execute_command, eval, shell, etc). Use for untrusted servers.</div>
+          <div class="policy-desc">Maximum paranoia. No network, no writes, blocks everything dangerous. Use this for random npm packages you don't trust.</div>
         </div>
         <div class="policy-card">
           <div class="policy-name">readonly</div>
-          <div class="policy-desc">Read-only access to mounted paths. Only allows read_file, list_directory, search_files, get_file_info tools.</div>
+          <div class="policy-desc">Look but don't touch. Server can read your code but can't modify or steal it. Good for code analysis tools.</div>
         </div>
         <div class="policy-card">
           <div class="policy-name">development</div>
-          <div class="policy-desc">Balanced for local development. Write access to /workspace, localhost network allowed, extended timeout.</div>
+          <div class="policy-desc">For servers you mostly trust. Write access to project folder, localhost allowed. Still can't read your SSH keys.</div>
         </div>
         <div class="policy-card">
           <div class="policy-name">network-isolated</div>
-          <div class="policy-desc">Full filesystem access to mounted paths but completely network isolated. Good for offline processing.</div>
+          <div class="policy-desc">Can do anything locally but can't phone home. Server works normally but your data stays on your machine.</div>
         </div>
       </div>
 
@@ -590,7 +590,7 @@ ERROR: Tool 'run_code' is blocked by policy
         <h2 class="section-title">Downloads</h2>
       </div>
 
-      <p>Pre-built binaries for all major platforms. Or use the <a href="#install">install script</a>.</p>
+      <p>Grab the binary for your platform. No dependencies, no runtime, just a single executable.</p>
 
       <div class="downloads-table">
         <table>
@@ -648,7 +648,7 @@ ERROR: Tool 'run_code' is blocked by policy
           <span class="brand-symbol">&#9618;</span>
           <span class="brand-text">MCP JAIL</span>
         </div>
-        <p class="footer-tagline">Secure MCP Server Sandbox</p>
+        <p class="footer-tagline">Stop trusting MCP servers. Start jailing them.</p>
         <p class="footer-links">
           <a href="https://github.com/iwallarm/mcpjail">GitHub</a> &#183;
           <a href="https://github.com/iwallarm/mcpjail/issues">Issues</a> &#183;
